@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oscar — Airpoints Claim Live Demo Sequence v1</title>
+  <style>
+    :root {
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.205 0.005 220);
+      --muted: oklch(0.97 0.004 220);
+      --muted-foreground: oklch(0.50 0.008 220);
+      --border: oklch(0.92 0.004 220);
+      --border-strong: oklch(0.82 0.005 220);
+      --primary: oklch(0.205 0.005 220);
+      --primary-foreground: oklch(0.985 0 0);
+      --accent: oklch(0.69 0.12 205);
+      --accent-muted: oklch(0.95 0.018 205);
+      --warning: oklch(0.82 0.14 90);
+      --warning-muted: oklch(0.97 0.04 90);
+      --success: oklch(0.72 0.14 155);
+      --success-muted: oklch(0.96 0.04 155);
+      --danger: oklch(0.64 0.18 22);
+      --danger-muted: oklch(0.97 0.03 22);
+      --canvas: oklch(0.94 0.003 220);
+      --radius: 10px;
+      --radius-sm: 8px;
+      --radius-lg: 14px;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+      --shadow-soft: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--canvas);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    .cover-panel {
+      background: linear-gradient(140deg, var(--primary) 0%, oklch(0.28 0.02 220) 100%);
+      color: white;
+      border-radius: 18px;
+      padding: 42px 40px 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+    .cover-kicker {
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+    .cover-title {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.04;
+      font-weight: 800;
+    }
+    .cover-sub {
+      margin: 0 0 22px;
+      max-width: 780px;
+      font-size: 17px;
+      color: rgba(255,255,255,0.86);
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .cover-meta-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .cover-meta-card .label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.64);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .cover-meta-card .value {
+      font-size: 14px;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .cover-bottom {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .cover-bottom .left,
+    .cover-bottom .right {
+      font-size: 12px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.5;
+    }
+    .cover-bottom .right {
+      text-align: right;
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .card h2, .scenario h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: var(--primary);
+    }
+    .card p {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--foreground);
+    }
+    .meta-list, .flow-list {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 15px;
+    }
+    .meta-list li, .flow-list li { margin-bottom: 8px; }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pill.frustrated {
+      background: var(--danger-muted);
+      color: var(--danger);
+      border: 1px solid color-mix(in srgb, var(--danger) 35%, white);
+    }
+    .pill.enthusiastic {
+      background: var(--success-muted);
+      color: oklch(0.45 0.12 155);
+      border: 1px solid color-mix(in srgb, var(--success) 35%, white);
+    }
+    .pill.handover {
+      background: var(--warning-muted);
+      color: oklch(0.45 0.12 90);
+      border: 1px solid color-mix(in srgb, var(--warning) 35%, white);
+    }
+    .scenario {
+      margin-bottom: 28px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px 10px;
+      box-shadow: var(--shadow-soft);
+    }
+    .scenario-header {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .scenario-copy {
+      flex: 1;
+      min-width: 280px;
+    }
+    .scenario-kicker {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .scenario-copy p {
+      margin: 8px 0 0;
+      font-size: 15px;
+      color: var(--muted-foreground);
+      max-width: 760px;
+    }
+    .scenario-tag {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      min-width: 240px;
+    }
+    .scenario-tag strong {
+      display: block;
+      font-size: 13px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .scenario-tag span {
+      font-size: 14px;
+      color: var(--muted-foreground);
+    }
+    .turn {
+      border-top: 1px solid var(--border);
+      padding: 20px 0 22px;
+    }
+    .turn:first-of-type { border-top: 0; padding-top: 0; }
+    .turn-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .turn-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .turn-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-radius: var(--radius);
+      padding: 18px 18px 20px;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .callout {
+      background: var(--warning-muted);
+      border: 1px solid var(--warning);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .callout h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 22px;
+    }
+    .callout p {
+      margin: 0;
+      font-size: 15px;
+    }
+    .call-flow {
+      background: var(--warning-muted);
+      border: 1px solid var(--warning);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .call-flow h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 24px;
+    }
+    .call-flow p {
+      margin: 0 0 14px;
+      font-size: 15px;
+    }
+    @media (max-width: 860px) {
+      .intro-grid { grid-template-columns: 1fr; }
+      .cover-panel { padding: 30px 24px 24px; }
+      .cover-title { font-size: 34px; }
+      .cover-meta { grid-template-columns: 1fr; }
+      .cover-bottom { flex-direction: column; align-items: flex-start; }
+      .cover-bottom .right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="cover-panel">
+      <div class="cover-kicker">Oscar Testing Pack</div>
+      <div class="cover-title">Airpoints Claim Live Demo Sequence v1</div>
+      <p class="cover-sub">
+        A call-ready Prompt Engine pack using one Frustrated, one Enthusiastic, and one Handover
+        Airpoints claim scenario. Each block is designed to sit underneath the existing Oscar rewriter system prompt.
+      </p>
+      <div class="cover-meta">
+        <div class="cover-meta-card">
+          <div class="label">Scope</div>
+          <div class="value">Airpoints claim rewriter demos for live review with the Air NZ team.</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Format</div>
+          <div class="value">Latest Customer Message plus Service Contract only.</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Coverage</div>
+          <div class="value">Frustrated, Enthusiastic, and Handover claim paths.</div>
+        </div>
+      </div>
+      <div class="cover-bottom">
+        <div class="left">Built to mirror the Oscar testing guide style, but focused on copy-paste demo inputs.</div>
+        <div class="right">Prompt Engine-ready<br />Oscar rewriter system prompt assumed</div>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="card">
+        <h2>What This Pack Covers</h2>
+        <p>This is the tighter demo set for live walkthroughs. It keeps the runtime honest:</p>
+        <ul class="meta-list">
+          <li>`Latest Customer Message` plus `Service Contract` only</li>
+          <li>No extra wrapper instructions</li>
+          <li>One scenario from each category so the team can compare happy path, claim flow, and handover behaviour</li>
+        </ul>
+        <div class="pill-row">
+          <span class="pill frustrated">Conv 3 — Frustrated</span>
+          <span class="pill enthusiastic">Conv 5 — Enthusiastic</span>
+          <span class="pill handover">Conv 8 — Handover</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>How To Use It</h2>
+        <ol class="flow-list">
+          <li>Open Prompt Engine with the Oscar rewriter system prompt already loaded.</li>
+          <li>Paste one turn block at a time.</li>
+          <li>Talk through how Oscar handles detail collection, confirmation, and boundaries.</li>
+          <li>Use the three scenarios to show education, clean progression, and specialist handover.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="callout">
+      <h2>Important Note</h2>
+      <p>
+        The Airpoints workbook available here is a summary sheet, not the full turn-by-turn tabs.
+        These sequences are grounded in the scenario titles, triggers, and business rules from the summary,
+        but they are inferred rather than copied from detailed conversation sheets.
+      </p>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">1. Frustrated — Conv 3</div>
+          <h2>Standard Retro Claim — Flown 3 Weeks Ago</h2>
+          <p>Customer flew Air NZ three weeks ago and the points did not credit automatically.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Claim-window education, clean detail collection, confirmation, and a grounded submission response.</span>
+        </div>
+      </div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div><pre>Latest Customer Message: i flew air nz three weeks ago and the points still haven't shown up
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_missing
+exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
+customer_facing_task: Start a standard retro claim because the travel is inside the normal claim window, and collect the key details needed to proceed.
+facts_to_include:
+- travel happened 3 weeks ago
+- the claim is inside the normal retro-claim window
+- a few claim details are needed to continue
+next_action:
+- confirm the claim can be progressed
+- ask for the minimum useful claim details
+protected_values:
+- 3 weeks ago
+- claim window
+required_concepts:
+- inside the claim window
+- collect details to proceed
+do_not_include:
+- internal service labels
+- invented rejection language
+- unnecessary jargon</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: booking ABC123, ticket 0861234567890, flight NZ101 on 2026-05-10
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_confirm
+exit_point: EXIT_2_CONFIRM_STANDARD_RETRO_CLAIM
+customer_facing_task: Confirm the collected claim details before submitting the retro claim.
+facts_to_include:
+- booking reference: ABC123
+- ticket number: 0861234567890
+- flight number: NZ101
+- flight date: 2026-05-10
+next_action:
+- ask the customer to confirm the details
+- yes submits the claim
+- no means correct or cancel
+protected_values:
+- ABC123
+- 0861234567890
+- NZ101
+- 2026-05-10
+required_concepts:
+- confirm before submission
+- yes submits
+- no corrects or cancels
+do_not_include:
+- internal service labels
+- extra policy detail not supplied
+- invented status outcome</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: yes, that's right
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: business_result
+exit_point: EXIT_3_SUBMIT_STANDARD_RETRO_CLAIM
+customer_facing_task: Confirm that the retro claim has been submitted and set a grounded expectation for what happens next.
+facts_to_include:
+- the retro claim has been submitted
+- the submitted details match the confirmed booking, ticket, flight number, and date
+- the customer should now wait for the claim to be processed
+next_action:
+- confirm the submission clearly
+- keep the next-step expectation simple and practical
+protected_values:
+- ABC123
+- 0861234567890
+- NZ101
+- 2026-05-10
+required_concepts:
+- claim submitted
+- waiting is now the next step
+do_not_include:
+- internal service labels
+- invented processing guarantees
+- invented extra contact paths</pre></div>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">2. Enthusiastic — Conv 5</div>
+          <h2>Quick Retro Claim — Air NZ Long-Haul</h2>
+          <p>Standard Air NZ AKL-Vancouver return, with points missing on the return leg only.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Low-friction claim progression, efficient confirmation, and a concise positive outcome.</span>
+        </div>
+      </div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div><pre>Latest Customer Message: my return leg from vancouver didn't credit but the outbound did
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_missing
+exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
+customer_facing_task: Start a clean retro claim for the missing return leg and collect the key details needed to proceed quickly.
+facts_to_include:
+- only the return leg is missing
+- the claim can be progressed
+- the required details are needed to continue
+next_action:
+- keep the response efficient and positive
+- ask only for the details needed to submit the claim
+protected_values:
+- return leg
+- missing
+required_concepts:
+- claim can proceed
+- collect details to continue
+do_not_include:
+- internal service labels
+- unnecessary policy explanation
+- invented delay</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: yep it's booking XYZ789, ticket 0865555555555, AKL to YVR return, missing the way back
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_confirm
+exit_point: EXIT_2_CONFIRM_CLEAN_RETRO_CLAIM
+customer_facing_task: Confirm the collected return-leg claim details before submission.
+facts_to_include:
+- booking reference: XYZ789
+- ticket number: 0865555555555
+- route: AKL to YVR return
+- missing sector: return leg
+next_action:
+- ask for confirmation before submission
+- yes submits the claim
+- no means correct or cancel
+protected_values:
+- XYZ789
+- 0865555555555
+- AKL
+- YVR
+- return leg
+required_concepts:
+- details are being confirmed
+- yes submits
+- no corrects or cancels
+do_not_include:
+- internal service labels
+- invented credit timing if not supplied
+- extra policy material</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: perfect, yes please
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: business_result
+exit_point: EXIT_3_SUBMIT_CLEAN_RETRO_CLAIM
+customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly and close on a positive, low-friction note.
+facts_to_include:
+- the claim for the missing return leg has been submitted
+- the submitted details match the confirmed booking and ticket
+next_action:
+- confirm submission clearly
+- keep the tone positive and concise
+protected_values:
+- XYZ789
+- 0865555555555
+- AKL
+- YVR
+- return leg
+required_concepts:
+- claim submitted successfully
+- no further customer action needed right now
+do_not_include:
+- internal service labels
+- invented extra requirements
+- overlong recap</pre></div>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">3. Handover — Conv 8</div>
+          <h2>Star Alliance Partner Airline Claim</h2>
+          <p>Customer flew Lufthansa and wants the points credited to Air NZ Airpoints.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Specialist routing, clear explanation of limits, and a firm but clean handover boundary.</span>
+        </div>
+      </div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div><pre>Latest Customer Message: i flew lufthansa and want the points added to my air nz account
+
+Service Contract:
+
+service_type: partner_airline_retro_claim
+response_kind: handover
+exit_point: EXIT_1_PARTNER_AIRLINE_SPECIALIST_HANDOVER
+customer_facing_task: Explain that partner-airline Airpoints claims need the Airpoints support team form and cannot be completed directly here.
+facts_to_include:
+- Lufthansa is a partner-airline claim case
+- the Airpoints support team form is required
+- partner claims can take 3 or more weeks
+next_action:
+- explain the specialist path
+- hand over cleanly
+protected_values:
+- Lufthansa
+- support team form
+- 3 or more weeks
+required_concepts:
+- not directly addable here
+- specialist support path required
+do_not_include:
+- internal service labels
+- false promise of direct addition
+- invented shortcut</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: can you just do it for me now
+
+Service Contract:
+
+service_type: partner_airline_retro_claim
+response_kind: handover
+exit_point: EXIT_2_RESTATE_PARTNER_HANDOVER
+customer_facing_task: Restate the boundary clearly and keep the handover path simple.
+facts_to_include:
+- this cannot be completed directly here
+- the support team form is still the correct path
+next_action:
+- hold the boundary
+- do not reopen direct execution
+protected_values:
+- support team form
+- cannot be completed here
+required_concepts:
+- no direct processing path
+- handover remains the right next step
+do_not_include:
+- internal service labels
+- invented manual workaround
+- over-apology</pre></div>
+    </section>
+
+    <section class="call-flow">
+      <h2>Suggested Call Flow</h2>
+      <p>If you are walking the Air NZ team through this live, run the three conversations in this order:</p>
+      <ol class="flow-list">
+        <li><strong>Conv 5</strong> to show the clean happy path</li>
+        <li><strong>Conv 3</strong> to show the standard retro-claim path under mild frustration</li>
+        <li><strong>Conv 8</strong> to show the specialist handover boundary</li>
+      </ol>
+    </section>
+  </div>
+</body>
+</html>

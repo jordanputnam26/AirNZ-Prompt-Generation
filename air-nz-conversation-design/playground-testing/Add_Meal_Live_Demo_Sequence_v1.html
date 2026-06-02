@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oscar — Add Meal Live Demo Sequence v1</title>
+  <style>
+    :root {
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.205 0.005 220);
+      --muted: oklch(0.97 0.004 220);
+      --muted-foreground: oklch(0.50 0.008 220);
+      --border: oklch(0.92 0.004 220);
+      --border-strong: oklch(0.82 0.005 220);
+      --primary: oklch(0.205 0.005 220);
+      --primary-foreground: oklch(0.985 0 0);
+      --accent: oklch(0.69 0.12 205);
+      --accent-muted: oklch(0.95 0.018 205);
+      --warning: oklch(0.82 0.14 90);
+      --warning-muted: oklch(0.97 0.04 90);
+      --success: oklch(0.72 0.14 155);
+      --success-muted: oklch(0.96 0.04 155);
+      --danger: oklch(0.64 0.18 22);
+      --danger-muted: oklch(0.97 0.03 22);
+      --canvas: oklch(0.94 0.003 220);
+      --radius: 10px;
+      --radius-sm: 8px;
+      --radius-lg: 14px;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+      --shadow-soft: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--canvas);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    .cover-panel {
+      background: linear-gradient(140deg, var(--primary) 0%, oklch(0.28 0.02 220) 100%);
+      color: white;
+      border-radius: 18px;
+      padding: 42px 40px 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+    .cover-kicker {
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+    .cover-title {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.04;
+      font-weight: 800;
+    }
+    .cover-sub {
+      margin: 0 0 22px;
+      max-width: 780px;
+      font-size: 17px;
+      color: rgba(255,255,255,0.86);
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .cover-meta-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .cover-meta-card .label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.64);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .cover-meta-card .value {
+      font-size: 14px;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .cover-bottom {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .cover-bottom .left,
+    .cover-bottom .right {
+      font-size: 12px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.5;
+    }
+    .cover-bottom .right {
+      text-align: right;
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .card h2, .scenario h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: var(--primary);
+    }
+    .card p {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--foreground);
+    }
+    .meta-list, .flow-list {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 15px;
+    }
+    .meta-list li, .flow-list li { margin-bottom: 8px; }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pill.frustrated {
+      background: var(--danger-muted);
+      color: var(--danger);
+      border: 1px solid color-mix(in srgb, var(--danger) 35%, white);
+    }
+    .pill.enthusiastic {
+      background: var(--success-muted);
+      color: oklch(0.45 0.12 155);
+      border: 1px solid color-mix(in srgb, var(--success) 35%, white);
+    }
+    .pill.handover {
+      background: var(--warning-muted);
+      color: oklch(0.45 0.12 90);
+      border: 1px solid color-mix(in srgb, var(--warning) 35%, white);
+    }
+    .scenario {
+      margin-bottom: 28px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px 10px;
+      box-shadow: var(--shadow-soft);
+    }
+    .scenario-header {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .scenario-copy {
+      flex: 1;
+      min-width: 280px;
+    }
+    .scenario-kicker {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .scenario-copy p {
+      margin: 8px 0 0;
+      font-size: 15px;
+      color: var(--muted-foreground);
+      max-width: 760px;
+    }
+    .scenario-tag {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      min-width: 220px;
+    }
+    .scenario-tag strong {
+      display: block;
+      font-size: 13px;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .scenario-tag span {
+      font-size: 14px;
+      color: var(--muted-foreground);
+    }
+    .turn {
+      border-top: 1px solid var(--border);
+      padding: 20px 0 22px;
+    }
+    .turn:first-of-type { border-top: 0; padding-top: 0; }
+    .turn-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .turn-num {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .turn-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-radius: var(--radius);
+      padding: 18px 18px 20px;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .call-flow {
+      background: var(--warning-muted);
+      border: 1px solid var(--warning);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .call-flow h2 {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 24px;
+    }
+    .call-flow p {
+      margin: 0 0 14px;
+      font-size: 15px;
+    }
+    @media (max-width: 860px) {
+      .intro-grid { grid-template-columns: 1fr; }
+      .cover-panel { padding: 30px 24px 24px; }
+      .cover-title { font-size: 34px; }
+      .cover-meta { grid-template-columns: 1fr; }
+      .cover-bottom { flex-direction: column; align-items: flex-start; }
+      .cover-bottom .right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="cover-panel">
+      <div class="cover-kicker">Oscar Testing Pack</div>
+      <div class="cover-title">Add Meal Live Demo Sequence v1</div>
+      <p class="cover-sub">
+        A call-ready Prompt Engine pack using one Frustrated, one Enthusiastic, and one Handover
+        meal scenario. Each block is designed to sit underneath the existing Oscar rewriter system prompt.
+      </p>
+      <div class="cover-meta">
+        <div class="cover-meta-card">
+          <div class="label">Scope</div>
+          <div class="value">Add Meal rewriter demos for live review with the Air NZ team.</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Format</div>
+          <div class="value">Latest Customer Message plus Service Contract only.</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Coverage</div>
+          <div class="value">Frustrated, Enthusiastic, and Handover scenario paths.</div>
+        </div>
+      </div>
+      <div class="cover-bottom">
+        <div class="left">Built to mirror the Oscar testing guide style, but focused on copy-paste demo inputs.</div>
+        <div class="right">Prompt Engine-ready<br />Oscar rewriter system prompt assumed</div>
+      </div>
+    </section>
+
+    <section class="intro-grid">
+      <div class="card">
+        <h2>What This Pack Covers</h2>
+        <p>This is the tighter demo set for live walkthroughs. It keeps the runtime honest:</p>
+        <ul class="meta-list">
+          <li>`Latest Customer Message` plus `Service Contract` only</li>
+          <li>No extra wrapper instructions</li>
+          <li>One scenario from each category so the team can compare response styles quickly</li>
+        </ul>
+        <div class="pill-row">
+          <span class="pill frustrated">Conv 1 — Frustrated</span>
+          <span class="pill enthusiastic">Conv 5 — Enthusiastic</span>
+          <span class="pill handover">Conv 8 — Handover</span>
+        </div>
+      </div>
+      <div class="card">
+        <h2>How To Use It</h2>
+        <ol class="flow-list">
+          <li>Open Prompt Engine with the Oscar rewriter system prompt already loaded.</li>
+          <li>Paste one turn block at a time.</li>
+          <li>Let the team react to Oscar’s wording before moving to the next turn.</li>
+          <li>Use the three scenarios to show happy path, frustration handling, and handover behaviour.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">1. Frustrated — Conv 1</div>
+          <h2>Domestic Flight — No SSR Available</h2>
+          <p>Customer expects a special meal on a domestic NZ flight. None is available.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Clear limitation-setting, pushback handling, practical alternatives, and a calm close.</span>
+        </div>
+      </div>
+
+      <div class="turn">
+        <div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div>
+        <pre>Latest Customer Message: hi i need to add a vegetarian meal to my flight to auckland next week
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_1_IDENTIFY_BOOKING_AND_SET_EXPECTATIONS
+customer_facing_task: Acknowledge the request, surface the relevant domestic booking context, and set expectations that special meal requests are not available on domestic flights.
+facts_to_include:
+- customer name: Megan
+- route: Wellington to Auckland
+- flight date: 18 June
+- flight type: domestic
+- special meal requests are not available on domestic Air New Zealand flights
+next_action:
+- explain the limitation clearly
+- do not offer a special-meal request path
+- move the conversation forward by making the situation clear
+protected_values:
+- Megan
+- Wellington
+- Auckland
+- 18 June
+- domestic
+required_concepts:
+- booking has been identified
+- domestic flights do not support special meal requests
+- set expectations up front
+do_not_include:
+- internal service labels
+- SSR codes or internal airline terminology
+- invented workaround or approval paths
+- meal request confirmation</pre>
+      </div>
+
+      <div class="turn">
+        <div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div>
+        <pre>Latest Customer Message: what
+
+it's a 90 min flight
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_2_EXPLAIN_DOMESTIC_SERVICE_LIMIT
+customer_facing_task: Explain why a special meal cannot be added on this flight and clarify what is available on domestic services.
+facts_to_include:
+- the flight is domestic
+- domestic flights provide water, tea, coffee, and a snack
+- there is no full meal service
+- there is no SSR meal-request system for this flight
+- some snacks may be gluten-free
+- the snack itself is not customisable
+next_action:
+- answer the challenge directly
+- explain the service limit plainly
+- do not reopen the meal-request path
+protected_values:
+- domestic
+- water
+- tea
+- coffee
+- snack
+- gluten-free
+- not customisable
+required_concepts:
+- no full meal service
+- no special meal request path
+- explain what is available instead
+do_not_include:
+- internal service labels
+- apology-heavy language
+- invented meal exceptions
+- new contact or escalation options</pre>
+      </div>
+
+      <div class="turn">
+        <div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div>
+        <pre>Latest Customer Message: so i can't request anything
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_3_CONFIRM_NO_SPECIAL_MEAL_PATH
+customer_facing_task: Confirm that the customer cannot request a special meal through the meal-request system, and offer the most grounded practical alternative.
+facts_to_include:
+- special meal requests are not available on this flight
+- the best practical option is to bring food with you
+- there is a food range airside at Wellington
+next_action:
+- answer the yes-or-no question directly
+- offer one practical alternative
+- keep the answer grounded and concise
+protected_values:
+- Wellington
+- special meal system
+- food range airside
+required_concepts:
+- no special meal request path
+- practical alternative offered
+do_not_include:
+- internal service labels
+- invented exceptions
+- unsupported compensation or escalation paths
+- generic contact guidance</pre>
+      </div>
+
+      <div class="turn">
+        <div class="turn-head"><span class="turn-num">4</span><div class="turn-title">Turn 4</div></div>
+        <pre>Latest Customer Message: that's annoying
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_4_HANDLE_FRUSTRATION_AND_CLOSE
+customer_facing_task: Acknowledge the frustration, restate the limitation briefly, and close cleanly while offering help only if it is still genuinely useful.
+facts_to_include:
+- the news is disappointing
+- fuller meal options are available on Tasman and longer routes
+- the current flight does not support special meal requests
+next_action:
+- acknowledge the frustration without claiming human feelings
+- keep the response brief
+- optionally offer further help in a low-pressure way
+protected_values:
+- Tasman
+- longer routes
+- special meal requests
+required_concepts:
+- acknowledge frustration
+- no change to the domestic-flight limitation
+- close without pestering
+do_not_include:
+- internal service labels
+- fake empathy like "I understand how you feel"
+- invented exception handling
+- over-friendly filler</pre>
+      </div>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">2. Enthusiastic — Conv 5</div>
+          <h2>First Long-Haul — Asks Lots of Questions</h2>
+          <p>First-time long-haul flyer to Tokyo who needs help understanding vegetarian meal variants.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Warm guidance, education without overload, clean meal adds, and a confident positive close.</span>
+        </div>
+      </div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div><pre>Latest Customer Message: hi! i'm flying to tokyo for the first time next month and i want to add a vegetarian meal!
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: ask_confirm
+exit_point: EXIT_1_IDENTIFY_LONG_HAUL_BOOKING
+customer_facing_task: Respond warmly, identify the likely booking, and ask the customer to confirm the flight before making any changes.
+facts_to_include:
+- route: Auckland to Tokyo Narita
+- flight date: 8 October
+next_action:
+- confirm this is the correct booking
+- keep the tone upbeat and grounded
+protected_values:
+- Auckland
+- Tokyo Narita
+- 8 October
+required_concepts:
+- booking identified
+- confirmation needed before proceeding
+do_not_include:
+- internal service labels
+- meal already added
+- invented extra booking details</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: yes!!
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: ask_missing
+exit_point: EXIT_2_NARROW_VEGETARIAN_PREFERENCE
+customer_facing_task: Explain that there are multiple vegetarian meal variants on long-haul flights and ask the customer whether they have a preference.
+facts_to_include:
+- there are multiple vegetarian options on this route
+- a preference is needed before the meal can be added
+next_action:
+- ask whether they have a preference
+- keep the explanation simple and friendly
+protected_values:
+- vegetarian options
+required_concepts:
+- more than one vegetarian option exists
+- preference needed to continue
+do_not_include:
+- internal service labels
+- full option list unless asked
+- generic filler</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: oh i didn't know there were different ones, what are they?
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_3_EXPLAIN_VEGETARIAN_OPTIONS
+customer_facing_task: Explain the main vegetarian meal variants available on this long-haul route in clear, customer-friendly language.
+facts_to_include:
+- Vegan vegetarian: no animal products
+- Lacto-ovo vegetarian: no meat or fish, includes dairy and eggs
+- Asian or Hindu vegetarian: Indian-style, often spicy, limited dairy
+- Oriental vegetarian: Chinese-style, no dairy
+next_action:
+- explain the options clearly
+- help the customer choose without overwhelming them
+protected_values:
+- vegan vegetarian
+- lacto-ovo vegetarian
+- Asian or Hindu vegetarian
+- Oriental vegetarian
+- dairy
+- eggs
+- no animal products
+required_concepts:
+- there are several vegetarian variants
+- explain the differences simply
+do_not_include:
+- internal service labels unless genuinely useful
+- invented catering promises
+- pressure to choose immediately</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">4</span><div class="turn-title">Turn 4</div></div><pre>Latest Customer Message: oh interesting. i eat dairy and eggs so lacto ovo? what's that usually like
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_4_DESCRIBE_LACTO_OVO
+customer_facing_task: Confirm that lacto-ovo vegetarian sounds like the right fit and describe the meal style in broad, grounded terms.
+facts_to_include:
+- lacto-ovo vegetarian includes dairy and eggs
+- it is typically a pasta or rice-based main with vegetables and cheese or egg
+- standard sides and drinks still apply
+next_action:
+- answer the question directly
+- keep the description practical rather than overpromising
+protected_values:
+- dairy
+- eggs
+- pasta or rice-based main
+- vegetables
+- cheese or egg
+required_concepts:
+- this option fits the customer's stated preference
+- describe the likely meal style
+do_not_include:
+- internal service labels
+- guarantee of exact catering contents
+- invented premium detail</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">5</span><div class="turn-title">Turn 5</div></div><pre>Latest Customer Message: yeah that sounds great, let's do that
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_5_ADD_OUTBOUND_MEAL
+customer_facing_task: Confirm that the lacto-ovo vegetarian meal has been added to the outbound flight.
+facts_to_include:
+- meal type: lacto-ovo vegetarian
+- passenger name: Tom
+- route: Auckland to Tokyo Narita
+next_action:
+- confirm the meal has been added
+- keep the response crisp and positive
+protected_values:
+- lacto-ovo vegetarian
+- Tom
+- Auckland
+- Tokyo Narita
+required_concepts:
+- meal added successfully
+- outbound sector only so far
+do_not_include:
+- internal service labels unless helpful
+- return booking confirmation if not yet added
+- unnecessary recap</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">6</span><div class="turn-title">Turn 6</div></div><pre>Latest Customer Message: and is it on the return too or do i need to do it again
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: ask_confirm
+exit_point: EXIT_6_CHECK_RETURN_AND_CONFIRM_ADD
+customer_facing_task: Confirm that a return booking exists and ask whether the customer wants the same meal added there as well.
+facts_to_include:
+- return route: Tokyo Narita to Auckland
+- return date: 22 October
+- the same meal can be added to the return
+next_action:
+- ask whether to add the same meal on the return
+- keep it easy for the customer to say yes
+protected_values:
+- Tokyo Narita
+- Auckland
+- 22 October
+- same meal
+required_concepts:
+- return booking identified
+- confirmation needed to add on return
+do_not_include:
+- internal service labels
+- assumption that return is already updated
+- extra unrelated advice</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">7</span><div class="turn-title">Turn 7</div></div><pre>Latest Customer Message: yes please!!
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: business_result
+exit_point: EXIT_7_ADD_RETURN_MEAL
+customer_facing_task: Confirm that the same meal has been added to the return flight as well.
+facts_to_include:
+- meal type: lacto-ovo vegetarian
+- return route: Tokyo Narita to Auckland
+- meal is now added on both flights
+next_action:
+- confirm the return update clearly
+- mention Manage Booking if useful
+protected_values:
+- lacto-ovo vegetarian
+- Tokyo Narita
+- Auckland
+- both flights
+required_concepts:
+- return meal added
+- both sectors now covered
+do_not_include:
+- internal service labels
+- invented caveats
+- overlong explanation</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">8</span><div class="turn-title">Turn 8</div></div><pre>Latest Customer Message: amazing thanks so much, first long haul so this is all new
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: cancelled
+exit_point: EXIT_8_WARM_CLOSE
+customer_facing_task: Close warmly and confidently, matching the customer's positive energy without becoming cheesy.
+facts_to_include:
+- the customer is flying long-haul for the first time
+next_action:
+- close on a positive note
+- do not reopen the task unnecessarily
+protected_values:
+- first long haul
+required_concepts:
+- acknowledge the excitement
+- finish cleanly
+do_not_include:
+- internal service labels
+- over-familiar humour
+- unnecessary recap</pre></div>
+    </section>
+
+    <section class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-copy">
+          <div class="scenario-kicker">3. Handover — Conv 8</div>
+          <h2>Adding Meals For Family Members</h2>
+          <p>Customer wants meals added for spouse and children. Authority checks sit outside Oscar’s direct remit.</p>
+        </div>
+        <div class="scenario-tag">
+          <strong>What this shows</strong>
+          <span>Booking identification, calm boundary-setting, privacy explanation, and a clean handover summary.</span>
+        </div>
+      </div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">1</span><div class="turn-title">Turn 1</div></div><pre>Latest Customer Message: hi can you add meals for my whole family on our LA flight
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: ask_missing
+exit_point: EXIT_1_IDENTIFY_BOOKING_AND_REQUEST_MEAL_DETAILS
+customer_facing_task: Identify the booking, list the passengers visible on it, and ask what meals are being requested.
+facts_to_include:
+- route: Auckland to Los Angeles
+- flight date: 4 December
+- passengers: David, Sophie, Lily, and Jack
+next_action:
+- ask what meals are required
+- keep the tone helpful and efficient
+protected_values:
+- Auckland
+- Los Angeles
+- 4 December
+- David
+- Sophie
+- Lily
+- Jack
+required_concepts:
+- booking identified
+- meal details needed to continue
+do_not_include:
+- internal service labels
+- promise that all meals can be added directly
+- privacy explanation too early</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: hindu non veg for me and sophie, and child meals for lily and jack - they're 6 and 9
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: handover
+exit_point: EXIT_2_BOUNDARY_ON_OTHER_PASSENGERS
+customer_facing_task: Explain that the authenticated traveller's meal can be handled directly, but meals for the other passengers require a live agent because the authority check is out of scope here.
+facts_to_include:
+- Hindu non-vegetarian for David and Sophie
+- child meals for Lily and Jack
+- Lily is 6 and Jack is 9
+- live agent required for meals requested on behalf of other passengers
+next_action:
+- explain the boundary clearly
+- offer the practical choice between adding David's now or handing all four to an agent
+protected_values:
+- Hindu non-vegetarian
+- child meals
+- Lily
+- Jack
+- 6
+- 9
+- live agent
+required_concepts:
+- authenticated traveller can be handled directly
+- other passengers trigger handover
+- give the customer a practical choice
+do_not_include:
+- internal service labels
+- accusation or suspicion language
+- promise that all four can be completed here</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: oh come on it's my own family, i booked the whole thing
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: handover
+exit_point: EXIT_3_RESTATE_PRIVACY_STEP_AND_OPTIONS
+customer_facing_task: Acknowledge the frustration, explain that the privacy step still applies, and restate the two clean options.
+facts_to_include:
+- privacy step applies consistently
+- the live agent will see the conversation history
+- option one: add the authenticated traveller's meal now and pass the rest across
+- option two: have the agent handle all four together
+next_action:
+- stay calm under pushback
+- make the options easy to choose between
+protected_values:
+- privacy step
+- whole conversation
+- all four together
+required_concepts:
+- boundary still stands
+- no need to repeat everything to the live agent
+- customer can choose the path
+do_not_include:
+- internal service labels
+- defensive or argumentative tone
+- invented approval override</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">4</span><div class="turn-title">Turn 4</div></div><pre>Latest Customer Message: just pass it all across, i don't want to do it twice
+
+Service Contract:
+
+service_type: add_meal_request
+response_kind: handover
+exit_point: EXIT_4_SUMMARISE_AND_TRANSFER
+customer_facing_task: Confirm the handover and summarise the booking, requested meals, and reason for transfer so the next agent can pick it up cleanly.
+facts_to_include:
+- booking: Auckland to Los Angeles, 4 December, four passengers
+- requested meals: Hindu non-vegetarian for David and Sophie
+- requested meals: child meals for Lily and Jack
+- requested on both outbound and return
+- reason for handover: meals being added for passengers other than the authenticated user
+next_action:
+- summarise clearly
+- confirm the live transfer
+- close with a calm expectation
+protected_values:
+- Auckland
+- Los Angeles
+- 4 December
+- David
+- Sophie
+- Lily
+- Jack
+- Hindu non-vegetarian
+- child meals
+- authenticated user
+required_concepts:
+- summary passed through
+- live agent taking over
+- customer should not need to restate the request
+do_not_include:
+- internal service labels
+- invented wait times
+- false promise of immediate completion</pre></div>
+    </section>
+
+    <section class="call-flow">
+      <h2>Suggested Call Flow</h2>
+      <p>If you are walking the Air NZ team through this live, run the three conversations in this order:</p>
+      <ol class="flow-list">
+        <li><strong>Conv 5</strong> to show the clean happy path</li>
+        <li><strong>Conv 1</strong> to show explanation under frustration</li>
+        <li><strong>Conv 8</strong> to show boundary handling and handover</li>
+      </ol>
+    </section>
+  </div>
+</body>
+</html>
