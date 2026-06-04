@@ -6,7 +6,7 @@ It uses one scenario from each category:
 
 - `Conv 1` — Frustrated
 - `Conv 5` — Enthusiastic
-- `Conv 8` — Handover
+- `Conv 10` — Handover
 
 Each code block is designed to be pasted directly into Prompt Engine underneath the existing Oscar rewriter system prompt.
 
@@ -138,12 +138,11 @@ next_action:
 - use a short, natural acknowledgement of the reaction
 - keep the response brief and lightly warm
 - do not re-explain the limitation
-- offer further booking help in a low-pressure way
+- if offering more help, keep it narrow to this booking and only if it is genuinely useful
 protected_values:
 - special meal requests
 required_concepts:
 - acknowledge frustration
-- optional offer of booking help
 - close without pestering
 do_not_include:
 - internal service labels
@@ -155,6 +154,7 @@ do_not_include:
 - casual acknowledgements like "fair enough"
 - restating that nothing has changed
 - abstract phrasing like "it is a bit frustrating"
+- broad follow-on offers like "anything else on your booking"
 ```
 
 ## 2. Enthusiastic — Conv 5
@@ -272,61 +272,33 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_4_ADD_OUTBOUND_MEAL
-customer_facing_task: Confirm that the lacto-ovo vegetarian meal has been added to the outbound flight.
+customer_facing_task: Confirm that the lacto-ovo vegetarian meal has been added to the outbound flight, then proactively offer to add the same meal to the return booking as well.
 facts_to_include:
 - meal type: lacto-ovo vegetarian
 - passenger name: Tom
 - route: Auckland to Tokyo Narita
+- return route: Tokyo Narita to Auckland
+- return date: 22 October
 next_action:
 - confirm the meal has been added
-- keep the response crisp and positive
+- proactively ask whether the customer wants the same meal on the return
+- keep the response crisp, positive, and easy to say yes to
 protected_values:
 - lacto-ovo vegetarian
 - Tom
 - Auckland
 - Tokyo Narita
+- 22 October
 required_concepts:
 - meal added successfully
-- outbound sector only so far
+- return booking identified
+- proactive next step offered
 do_not_include:
 - internal service labels unless helpful
-- return booking confirmation if not yet added
 - unnecessary recap
 ```
 
 ### Turn 5
-
-```text
-Latest Customer Message: and is it on the return too or do i need to do it again
-
-Service Contract:
-
-service_type: add_meal_request
-response_kind: ask_confirm
-exit_point: EXIT_5_CHECK_RETURN_AND_CONFIRM_ADD
-customer_facing_task: Confirm that a return booking exists and ask whether the customer wants the same meal added there as well.
-facts_to_include:
-- return route: Tokyo Narita to Auckland
-- return date: 22 October
-- the same meal can be added to the return
-next_action:
-- ask whether to add the same meal on the return
-- keep it easy for the customer to say yes
-protected_values:
-- Tokyo Narita
-- Auckland
-- 22 October
-- same meal
-required_concepts:
-- return booking identified
-- confirmation needed to add on return
-do_not_include:
-- internal service labels
-- assumption that return is already updated
-- extra unrelated advice
-```
-
-### Turn 6
 
 ```text
 Latest Customer Message: yes please!!
@@ -335,7 +307,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
-exit_point: EXIT_6_ADD_RETURN_MEAL
+exit_point: EXIT_5_ADD_RETURN_MEAL
 customer_facing_task: Confirm that the same meal has been added to the return flight as well.
 facts_to_include:
 - meal type: lacto-ovo vegetarian
@@ -343,7 +315,7 @@ facts_to_include:
 - meal is now added on both flights
 next_action:
 - confirm the return update clearly
-- mention Manage Booking if useful
+- keep the confirmation concise and positive
 protected_values:
 - Tokyo Narita
 - Auckland
@@ -358,7 +330,7 @@ do_not_include:
 - overlong explanation
 ```
 
-### Turn 7
+### Turn 6
 
 ```text
 Latest Customer Message: amazing thanks so much, first long haul so this is all new
@@ -367,7 +339,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: cancelled
-exit_point: EXIT_7_WARM_CLOSE
+exit_point: EXIT_6_WARM_CLOSE
 customer_facing_task: Close warmly and confidently, matching the customer's positive energy without becoming cheesy.
 facts_to_include:
 - the customer is flying long-haul for the first time
@@ -385,138 +357,109 @@ do_not_include:
 - unnecessary recap
 ```
 
-## 3. Handover — Conv 8
+## 3. Handover — Conv 10
 
-- Conversation: `Adding meals for family members`
-- Trigger: `Customer wants meals added for spouse and children. Authority check is out of scope.`
+- Conversation: `Within the 48-hour cutoff window`
+- Trigger: `Customer's return flight departs from a non-NZ airport within 48 hours. Standard add is no longer possible, so Oscar needs to hand over for a best-effort attempt.`
 
 ### Turn 1
 
 ```text
-Latest Customer Message: hi can you add meals for my whole family on our LA flight
+Latest Customer Message: hi i forgot to add my vegetarian meal can you add it for my flight tomorrow from singapore
 
 Service Contract:
 
 service_type: add_meal_request
-response_kind: ask_missing
-exit_point: EXIT_1_IDENTIFY_BOOKING_AND_REQUEST_MEAL_DETAILS
-customer_facing_task: Identify the booking and ask who the meal requests are for before surfacing other-passenger detail.
+response_kind: handover
+exit_point: EXIT_1_IDENTIFY_CUTOFF_LIMIT
+customer_facing_task: Identify the booking, make clear that the request is inside the non-NZ 48-hour cutoff window, and explain that the standard add path is no longer available.
 facts_to_include:
-- route: Auckland to Los Angeles
-- flight date: 4 December
-- the Los Angeles booking has been identified
+- route: Singapore to Auckland
+- departure: tomorrow at 14:30
+- this is roughly 28 hours away
+- for flights departing non-NZ airports, the meal-request cutoff is 48 hours before departure
 next_action:
-- ask who the meals are for and what requests are needed
-- do not list other passenger names yet
-- keep the tone helpful and efficient
+- explain the cutoff clearly and early
+- make clear the standard add path is no longer available
+- keep the answer calm and matter-of-fact
 protected_values:
+- Singapore
 - Auckland
-- Los Angeles
-- 4 December
+- tomorrow at 14:30
+- 48 hours
 required_concepts:
 - booking identified
-- passenger scope needs clarifying before meal action
+- inside the cutoff window
+- standard add no longer available
 do_not_include:
 - internal service labels
-- promise that all meals can be added directly
-- other passenger names before they are needed
-- privacy explanation too early
+- invented workaround
+- immediate success language
 ```
 
 ### Turn 2
 
 ```text
-Latest Customer Message: hindu non veg for me and sophie, and child meals for lily and jack - they're 6 and 9
+Latest Customer Message: ugh. is there anything you can do
 
 Service Contract:
 
 service_type: add_meal_request
 response_kind: handover
-exit_point: EXIT_2_BOUNDARY_ON_OTHER_PASSENGERS
-customer_facing_task: Explain that the authenticated traveller's meal can be handled directly, but meals for the other passengers require a live agent because the authority check is out of scope here.
+exit_point: EXIT_2_HANDOVER_FOR_BEST_EFFORT
+customer_facing_task: Acknowledge the frustration, explain that Oscar cannot add the meal through the standard flow anymore, and hand over for a best-effort request to catering.
 facts_to_include:
-- the authenticated traveller wants a Hindu non-vegetarian meal
-- the other passengers need meal changes as well
-- live agent required for meals requested on behalf of other passengers
+- Oscar cannot add the meal through the standard flow at this point
+- a live agent can try a best-effort request direct to catering
+- if it can be done, the live agent will arrange it
 next_action:
-- explain the boundary clearly
-- offer the practical choice between handling the authenticated traveller here or handing the whole family to an agent
-- do not treat booking ownership as enough authority on its own
+- answer the pushback directly
+- explain the handover path in practical language
+- offer to pass the request across now
 protected_values:
-- Hindu non-vegetarian
 - live agent
+- best-effort request
+- catering
 required_concepts:
-- authenticated traveller can be handled directly
-- other passengers trigger handover
-- give the customer a practical choice
+- standard path unavailable
+- best-effort handover available
+- practical next step offered
 do_not_include:
 - internal service labels
-- accusation or suspicion language
-- promise that all four can be completed here
+- blamey tone
+- unsupported guarantee
 ```
 
 ### Turn 3
 
 ```text
-Latest Customer Message: oh come on it's my own family, i booked the whole thing
+Latest Customer Message: ok thanks
 
 Service Contract:
 
 service_type: add_meal_request
 response_kind: handover
-exit_point: EXIT_3_RESTATE_PRIVACY_STEP_AND_OPTIONS
-customer_facing_task: Acknowledge the frustration, explain that the privacy step still applies, and restate the two clean options.
+exit_point: EXIT_3_SUMMARISE_AND_TRANSFER
+customer_facing_task: Confirm the handover and summarise the booking, requested meal, and reason for transfer so the live agent can pick it up cleanly.
 facts_to_include:
-- privacy step applies consistently
-- the live agent will see the conversation history
-- option one: add the authenticated traveller's meal now and pass the rest across
-- option two: have the agent handle all four together
-next_action:
-- stay calm under pushback
-- make the options easy to choose between
-protected_values:
-- privacy step
-- whole conversation
-- all four together
-required_concepts:
-- boundary still stands
-- no need to repeat everything to the live agent
-- customer can choose the path
-do_not_include:
-- internal service labels
-- defensive or argumentative tone
-- invented approval override
-```
-
-### Turn 4
-
-```text
-Latest Customer Message: just pass it all across, i don't want to do it twice
-
-Service Contract:
-
-service_type: add_meal_request
-response_kind: handover
-exit_point: EXIT_4_SUMMARISE_AND_TRANSFER
-customer_facing_task: Confirm the handover and summarise the booking, requested meals, and reason for transfer so the next agent can pick it up cleanly.
-facts_to_include:
-- booking: Auckland to Los Angeles, 4 December, four passengers
-- requested meals include one Hindu non-vegetarian request for the authenticated traveller plus meal changes for the other passengers
-- reason for handover: meals being added for passengers other than the authenticated user
+- booking: Singapore to Auckland, departing tomorrow at 14:30
+- requested meal: vegetarian meal
+- passenger: Emma (authenticated user)
+- reason for handover: inside the 48-hour cutoff for a non-NZ departure
 next_action:
 - summarise clearly
 - confirm the live transfer
-- close with a calm expectation
+- set a calm best-effort expectation
 protected_values:
+- Singapore
 - Auckland
-- Los Angeles
-- 4 December
-- Hindu non-vegetarian
-- authenticated user
+- tomorrow at 14:30
+- vegetarian meal
+- Emma
 required_concepts:
 - summary passed through
 - live agent taking over
-- customer should not need to restate the request
+- best-effort attempt
 do_not_include:
 - internal service labels
 - invented wait times
@@ -529,7 +472,7 @@ If you are walking the Air NZ team through this sequence, I would run the three 
 
 1. `Conv 5` to show the clean happy path
 2. `Conv 1` to show explanation under frustration
-3. `Conv 8` to show boundary handling and handover
+3. `Conv 10` to show boundary handling and handover
 
 That gives you:
 

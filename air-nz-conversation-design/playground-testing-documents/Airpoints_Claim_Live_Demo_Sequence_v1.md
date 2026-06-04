@@ -105,10 +105,11 @@ exit_point: EXIT_3_SUBMIT_STANDARD_RETRO_CLAIM
 customer_facing_task: Confirm that the retro claim has been submitted and set a grounded expectation for what happens next.
 facts_to_include:
 - the retro claim has been submitted
-- the customer should now wait for the claim to be processed
+- the claim is now with the Airpoints team for processing
+- no more details are needed from the customer right now
 next_action:
 - confirm the submission clearly
-- keep the next-step expectation simple and practical
+- explain what happens next in plain language
 - do not re-list the full claim details unless clarity is needed
 protected_values:
 - ABC123
@@ -117,7 +118,8 @@ protected_values:
 - 2026-05-10
 required_concepts:
 - claim submitted
-- waiting is now the next step
+- now with the team for processing
+- nothing else needed right now
 do_not_include:
 - internal service labels
 - invented processing guarantees
@@ -210,10 +212,11 @@ exit_point: EXIT_3_SUBMIT_CLEAN_RETRO_CLAIM
 customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly and close on a positive, low-friction note.
 facts_to_include:
 - the claim for the missing return leg has been submitted
+- the claim is now with the Airpoints team for processing
 - no further customer action is needed right now
 next_action:
 - confirm submission clearly
-- keep the tone positive and concise
+- explain the next step briefly and keep the tone positive and concise
 - do not re-list the claim details unless clarity is needed
 protected_values:
 - XYZ789
@@ -223,6 +226,7 @@ protected_values:
 - return leg
 required_concepts:
 - claim submitted successfully
+- now with the team for processing
 - no further customer action needed right now
 do_not_include:
 - internal service labels
@@ -245,17 +249,17 @@ Service Contract:
 service_type: partner_airline_retro_claim
 response_kind: handover
 exit_point: EXIT_1_PARTNER_AIRLINE_SPECIALIST_HANDOVER
-customer_facing_task: Explain that partner-airline Airpoints claims need the Airpoints support team form and cannot be completed directly here.
+customer_facing_task: Explain that partner-airline Airpoints claims need to be lodged with the Airpoints support team through the request form, and cannot be completed directly here.
 facts_to_include:
 - Lufthansa is a partner-airline claim case
-- the Airpoints support team form is required
-- partner claims can take 3 or more weeks
+- the Airpoints support team request form is required
+- once lodged, partner claims can take 3 or more weeks
 next_action:
-- explain the specialist path
+- explain the specialist path in customer-relevant language
 - hand over cleanly
 protected_values:
 - Lufthansa
-- support team form
+- Airpoints support team request form
 - 3 or more weeks
 required_concepts:
 - not directly addable here
@@ -279,12 +283,13 @@ exit_point: EXIT_2_RESTATE_PARTNER_HANDOVER
 customer_facing_task: Restate the boundary clearly and keep the handover path simple.
 facts_to_include:
 - this cannot be completed directly here
-- the support team form is still the correct path
+- the Airpoints support team request form is still the correct path
 next_action:
 - hold the boundary
+- point back to the correct specialist path
 - do not reopen direct execution
 protected_values:
-- support team form
+- Airpoints support team request form
 - cannot be completed here
 required_concepts:
 - no direct processing path
@@ -293,6 +298,7 @@ do_not_include:
 - internal service labels
 - invented manual workaround
 - over-apology
+- defensive tone
 ```
 
 ## Suggested call flow
