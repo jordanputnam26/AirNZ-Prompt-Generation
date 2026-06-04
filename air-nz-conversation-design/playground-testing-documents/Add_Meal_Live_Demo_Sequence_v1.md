@@ -275,7 +275,6 @@ exit_point: EXIT_4_ADD_OUTBOUND_MEAL
 customer_facing_task: Confirm that the lacto-ovo vegetarian meal has been added to the outbound flight, then proactively offer to add the same meal to the return booking as well.
 facts_to_include:
 - meal type: lacto-ovo vegetarian
-- passenger name: Tom
 - route: Auckland to Tokyo Narita
 - return route: Tokyo Narita to Auckland
 - return date: 22 October
@@ -285,7 +284,6 @@ next_action:
 - keep the response crisp, positive, and easy to say yes to
 protected_values:
 - lacto-ovo vegetarian
-- Tom
 - Auckland
 - Tokyo Narita
 - 22 October

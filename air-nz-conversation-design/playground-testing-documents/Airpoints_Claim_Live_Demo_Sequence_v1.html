@@ -394,65 +394,93 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
-customer_facing_task: Acknowledge that the travel appears to be inside the normal retro-claim window, and collect the key details needed to check and progress the claim cleanly.
+customer_facing_task: Acknowledge the missing points and collect the minimum details needed to look into it cleanly before moving to a claim.
 facts_to_include:
 - travel happened 3 weeks ago
-- this looks like the standard retro-claim path
-- a few claim details are needed before the claim can be submitted
+- a few details are needed to look into it properly
 next_action:
-- say it looks like the claim is inside the normal window
+- say you can look into it once the details are in
 - ask for the minimum useful claim details
-- do not imply the claim is already lodged or approved
+- do not imply a claim is already lodged, approved, or definitely the next step
 protected_values:
 - 3 weeks ago
-- claim window
 required_concepts:
-- likely inside the claim window
-- collect details before submission
+- can look into it
+- collect details before deciding the next step
 do_not_include:
 - internal service labels
 - invented rejection language
 - unnecessary jargon
-- early-success language</pre></div>
+- early-success language
+- claim-underway language before the details are checked</pre></div>
 
       <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: booking ABC123, ticket 0861234567890, flight NZ101 on 2026-05-10
 
 Service Contract:
 
 service_type: claim_missing_airpoints
-response_kind: ask_confirm
-exit_point: EXIT_2_CONFIRM_STANDARD_RETRO_CLAIM
-customer_facing_task: Confirm the collected claim details before submitting the retro claim.
+response_kind: business_result
+exit_point: EXIT_2_ACKNOWLEDGE_DETAILS_AND_CHECK
+customer_facing_task: Acknowledge the details, confirm you have what you need to check the missing points, and keep the conversation moving without a redundant confirmation step.
 facts_to_include:
 - booking reference: ABC123
 - ticket number: 0861234567890
 - flight number: NZ101
 - flight date: 2026-05-10
 next_action:
-- ask the customer to confirm the details
-- yes submits the claim
-- no means correct or cancel
+- acknowledge that the details are in
+- say you have what you need to check now
+- do not ask the customer to confirm details they just typed unless something is unclear
 protected_values:
 - ABC123
 - 0861234567890
 - NZ101
 - 2026-05-10
 required_concepts:
-- confirm before submission
-- yes submits
-- no corrects or cancels
+- details received
+- enough information to check
+- no extra confirmation step
 do_not_include:
 - internal service labels
-- extra policy detail not supplied
-- invented status outcome</pre></div>
+- full detail recap unless clarity is needed
+- invented status outcome
+- confirmation for confirmation's sake</pre></div>
 
-      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: yes, that's right
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: okay, thanks
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_confirm
+exit_point: EXIT_3_STANDARD_RETRO_CLAIM_ELIGIBLE
+customer_facing_task: Confirm that the flight looks eligible for a standard retro claim and ask whether the customer wants you to submit it.
+facts_to_include:
+- based on the details provided, this flight looks eligible for a standard retro claim
+- Oscar can submit the claim from here if the customer wants
+next_action:
+- say the flight looks eligible
+- ask directly whether the customer wants you to submit the claim
+- keep the question clear and low-pressure
+protected_values:
+- ABC123
+- 0861234567890
+- NZ101
+- 2026-05-10
+required_concepts:
+- eligible for claim
+- customer choice to submit
+do_not_include:
+- internal service labels
+- invented approval guarantees
+- unnecessary recap</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">4</span><div class="turn-title">Turn 4</div></div><pre>Latest Customer Message: yes, please go ahead
 
 Service Contract:
 
 service_type: claim_missing_airpoints
 response_kind: business_result
-exit_point: EXIT_3_SUBMIT_STANDARD_RETRO_CLAIM
+exit_point: EXIT_4_SUBMIT_STANDARD_RETRO_CLAIM
 customer_facing_task: Confirm that the retro claim has been submitted and set a grounded expectation for what happens next.
 facts_to_include:
 - the retro claim has been submitted
@@ -486,7 +514,7 @@ do_not_include:
         </div>
         <div class="scenario-tag">
           <strong>What this shows</strong>
-          <span>Low-friction claim progression, efficient confirmation, and a concise positive outcome.</span>
+          <span>Low-friction claim diagnosis, a clear consent step, and a concise positive outcome.</span>
         </div>
       </div>
 
@@ -497,21 +525,20 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
-customer_facing_task: Acknowledge that only the return leg appears to be missing, and collect the details needed to check and submit the claim quickly.
+customer_facing_task: Acknowledge that only the return leg appears to be missing, and collect the details needed to look into it properly before moving to a claim.
 facts_to_include:
 - only the return leg appears to be missing
-- the likely path is a retro claim for that sector
-- the required details are still needed before submission
+- the required details are still needed to look into it properly
 next_action:
 - keep the response efficient and positive
-- ask only for the details needed to confirm and submit the claim
-- do not imply the claim is already accepted
+- ask only for the details needed to check it properly
+- do not imply the claim is already accepted or definitely the next step
 protected_values:
 - return leg
 - missing
 required_concepts:
 - only the return leg appears missing
-- collect details before submission
+- collect details before deciding the next step
 do_not_include:
 - internal service labels
 - unnecessary policy explanation
@@ -523,18 +550,18 @@ do_not_include:
 Service Contract:
 
 service_type: claim_missing_airpoints
-response_kind: ask_confirm
-exit_point: EXIT_2_CONFIRM_CLEAN_RETRO_CLAIM
-customer_facing_task: Confirm the collected return-leg claim details before submission.
+response_kind: business_result
+exit_point: EXIT_2_ACKNOWLEDGE_CLEAN_RETRO_DETAILS
+customer_facing_task: Acknowledge the return-leg details, confirm you have what you need to check the missing points, and keep the conversation moving without a redundant confirmation step.
 facts_to_include:
 - booking reference: XYZ789
 - ticket number: 0865555555555
 - route: AKL to YVR return
 - missing sector: return leg
 next_action:
-- ask for confirmation before submission
-- yes submits the claim
-- no means correct or cancel
+- acknowledge that the details are in
+- say you have what you need to check now
+- do not ask the customer to confirm details they just typed unless something is unclear
 protected_values:
 - XYZ789
 - 0865555555555
@@ -542,21 +569,51 @@ protected_values:
 - YVR
 - return leg
 required_concepts:
-- details are being confirmed
-- yes submits
-- no corrects or cancels
+- details received
+- enough information to check
+- no extra confirmation step
 do_not_include:
 - internal service labels
 - invented credit timing if not supplied
-- extra policy material</pre></div>
+- extra policy material
+- confirmation for confirmation's sake</pre></div>
 
-      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: perfect, yes please
+      <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: awesome, thanks
+
+Service Contract:
+
+service_type: claim_missing_airpoints
+response_kind: ask_confirm
+exit_point: EXIT_3_CLEAN_RETRO_CLAIM_ELIGIBLE
+customer_facing_task: Confirm that the missing return leg looks eligible for a retro claim and ask whether the customer wants you to submit it.
+facts_to_include:
+- based on the details provided, the missing return leg looks eligible for a retro claim
+- Oscar can submit the claim from here if the customer wants
+next_action:
+- say the missing return leg looks eligible
+- ask directly whether the customer wants you to submit the claim
+- keep the question positive, clear, and easy to answer
+protected_values:
+- XYZ789
+- 0865555555555
+- AKL
+- YVR
+- return leg
+required_concepts:
+- eligible for claim
+- customer choice to submit
+do_not_include:
+- internal service labels
+- invented approval guarantees
+- overlong recap</pre></div>
+
+      <div class="turn"><div class="turn-head"><span class="turn-num">4</span><div class="turn-title">Turn 4</div></div><pre>Latest Customer Message: yes please!!
 
 Service Contract:
 
 service_type: claim_missing_airpoints
 response_kind: business_result
-exit_point: EXIT_3_SUBMIT_CLEAN_RETRO_CLAIM
+exit_point: EXIT_4_SUBMIT_CLEAN_RETRO_CLAIM
 customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly and close on a positive, low-friction note.
 facts_to_include:
 - the claim for the missing return leg has been submitted
