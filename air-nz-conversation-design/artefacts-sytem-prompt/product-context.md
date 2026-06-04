@@ -80,12 +80,30 @@ Workshop material indicates a multi-agent system with a front-of-house rewriting
 
 Users should experience a single Air New Zealand service persona, not visible agent switching.
 
+### Current prompt-engine shape
+
+The current testing setup matters for prompt design.
+
+At the moment, Oscar is being driven mainly by:
+
+- a System Prompt
+- the latest customer message
+- a Service Agent block that describes the turn goal, constraints, and grounded facts
+
+This means a lot of the conversation design is being expressed through the Service Agent block, not only through the System Prompt. In practice:
+
+- the Service Agent block carries most of the turn strategy
+- the System Prompt governs how Oscar behaves and phrases that strategy
+
+This should be treated as a rewriter-style architecture, not a fully autonomous service agent generating the whole interaction plan from scratch.
+
 ### Known runtime context and data assumptions
 
 - Customer is already authenticated before entering the servicing flow
 - The system may have account and booking context available at the start of the conversation
 - The agent has short-term conversational memory within the current chat
 - The agent should not assume access to prior conversations unless that is explicitly present in runtime context
+- The Service Agent block may carry more of the turn logic than a simple fact payload. The prompt should be written with that in mind.
 
 ### Broader Air New Zealand experience pillars relevant to conversation
 

@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oscar - Feedback Session Synthesis v1</title>
+  <style>
+    :root {
+      --background: oklch(1 0 0);
+      --foreground: oklch(0.205 0.005 220);
+      --muted: oklch(0.97 0.004 220);
+      --muted-foreground: oklch(0.50 0.008 220);
+      --border: oklch(0.92 0.004 220);
+      --border-strong: oklch(0.82 0.005 220);
+      --primary: oklch(0.205 0.005 220);
+      --primary-foreground: oklch(0.985 0 0);
+      --accent: oklch(0.69 0.12 205);
+      --accent-muted: oklch(0.95 0.018 205);
+      --warning: oklch(0.82 0.14 90);
+      --warning-muted: oklch(0.97 0.04 90);
+      --success: oklch(0.72 0.14 155);
+      --success-muted: oklch(0.96 0.04 155);
+      --danger: oklch(0.64 0.18 22);
+      --danger-muted: oklch(0.97 0.03 22);
+      --canvas: oklch(0.94 0.003 220);
+      --radius: 10px;
+      --radius-sm: 8px;
+      --radius-lg: 14px;
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+      --shadow-soft: 0 4px 14px rgba(15, 23, 42, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--canvas);
+      color: var(--foreground);
+      line-height: 1.5;
+    }
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+    .cover-panel {
+      background: linear-gradient(140deg, var(--primary) 0%, oklch(0.28 0.02 220) 100%);
+      color: white;
+      border-radius: 18px;
+      padding: 42px 40px 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+    .cover-kicker {
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.72);
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+    .cover-title {
+      margin: 0 0 12px;
+      font-size: 44px;
+      line-height: 1.04;
+      font-weight: 800;
+    }
+    .cover-sub {
+      margin: 0 0 22px;
+      max-width: 820px;
+      font-size: 17px;
+      color: rgba(255,255,255,0.86);
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .cover-meta-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .cover-meta-card .label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.64);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .cover-meta-card .value {
+      font-size: 14px;
+      color: rgba(255,255,255,0.95);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+    .cover-bottom {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+    }
+    .cover-bottom .left,
+    .cover-bottom .right {
+      font-size: 12px;
+      color: rgba(255,255,255,0.76);
+      line-height: 1.5;
+    }
+    .cover-bottom .right {
+      text-align: right;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: var(--primary);
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: var(--primary);
+    }
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    p {
+      margin: 0 0 12px;
+      font-size: 15px;
+      color: var(--foreground);
+    }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 15px;
+    }
+    li { margin-bottom: 8px; }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+    .pill.rewriter {
+      background: var(--accent-muted);
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 25%, white);
+    }
+    .pill.service {
+      background: var(--warning-muted);
+      color: oklch(0.45 0.12 90);
+      border-color: color-mix(in srgb, var(--warning) 30%, white);
+    }
+    .pill.high {
+      background: var(--danger-muted);
+      color: var(--danger);
+      border-color: color-mix(in srgb, var(--danger) 28%, white);
+    }
+    .pill.medium {
+      background: var(--warning-muted);
+      color: oklch(0.45 0.12 90);
+      border-color: color-mix(in srgb, var(--warning) 28%, white);
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+    .summary-stat {
+      background: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+    }
+    .summary-stat .label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted-foreground);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .summary-stat .value {
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .summary-stat .note {
+      font-size: 13px;
+      color: var(--muted-foreground);
+    }
+    .table-card {
+      overflow: hidden;
+      padding: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      padding: 14px 16px;
+      font-size: 14px;
+      text-align: left;
+    }
+    th {
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    tr:last-child td {
+      border-bottom: 0;
+    }
+    td strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--primary);
+    }
+    .muted {
+      color: var(--muted-foreground);
+    }
+    .section {
+      margin-bottom: 28px;
+    }
+    .section-head {
+      margin-bottom: 14px;
+    }
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      color: var(--primary);
+    }
+    .section-head p {
+      margin: 0;
+      color: var(--muted-foreground);
+      max-width: 840px;
+    }
+    .issue-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .issue-card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+    }
+    .issue-card h3 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .issue-block {
+      margin-top: 14px;
+    }
+    .issue-block .label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .callout {
+      background: var(--accent-muted);
+      border: 1px solid color-mix(in srgb, var(--accent) 35%, white);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .callout p:last-child,
+    .issue-card p:last-child,
+    .card p:last-child {
+      margin-bottom: 0;
+    }
+    .next-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .step-card {
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .footer {
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--muted-foreground);
+    }
+
+    @media (max-width: 980px) {
+      .grid-2,
+      .grid-3,
+      .issue-grid,
+      .next-grid,
+      .summary-grid,
+      .cover-meta {
+        grid-template-columns: 1fr;
+      }
+      .cover-title {
+        font-size: 36px;
+      }
+      .cover-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .cover-bottom .right {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="cover-panel">
+      <div class="cover-kicker">Air New Zealand / Oscar Review</div>
+      <h1 class="cover-title">Oscar Feedback Session Synthesis</h1>
+      <p class="cover-sub">A consolidated readout from the Ben, Terri, and Lauren review sessions. This turns the conversations and exported JSON examples into a usable working view of where Oscar is close, where the experience is breaking down, and which layer likely owns the fix.</p>
+
+      <div class="cover-meta">
+        <div class="cover-meta-card">
+          <div class="label">Version</div>
+          <div class="value">v1</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Date</div>
+          <div class="value">3 June 2026</div>
+        </div>
+        <div class="cover-meta-card">
+          <div class="label">Focus</div>
+          <div class="value">Tone, flow, handover, and ownership split</div>
+        </div>
+      </div>
+
+      <div class="cover-bottom">
+        <div class="left">Built from three feedback calls, plus the structured conversation examples used during those sessions.</div>
+        <div class="right">Internal working document<br />Air New Zealand and Tomoro</div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <div class="eyebrow">High-confidence read</div>
+        <h2>This is a stack problem, not just a tone problem</h2>
+        <p>Oscar is not mainly failing because the voice is far off. The stronger issue is that three things are being tuned at once:</p>
+        <ul>
+          <li>the System Prompt layer that controls Oscar's voice and behaviour rules</li>
+          <li>the Service Agent block that tells Oscar what this turn is trying to do</li>
+          <li>the conversation-flow design choices about what to ask, when to confirm, when to hand over, and when to proactively move forward</li>
+        </ul>
+        <p>In this prompt-engine setup, that third category is also being carried mostly by the Service Agent block. The System Prompt acts as the behaviour layer over the top.</p>
+        <p>That is why some messages sound almost right but still feel wrong in use. The wording is close, but the move underneath is too certain, too repetitive, badly timed, or not grounded in the actual capability.</p>
+        <div class="callout">
+          <p><strong>Important tonal rule from Ben's review.</strong> Oscar should not aim for one fixed level of warmth. Its tone needs to flex by moment: softer when delivering a limit or handling frustration, and more direct, confident, and proactive when the path is clear and it should move the customer forward.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="eyebrow">Source set</div>
+        <h2>Evidence used</h2>
+        <ul>
+          <li>Ben feedback transcript</li>
+          <li>Terri feedback transcript</li>
+          <li>Lauren feedback transcript</li>
+          <li>Ben conversation JSONs for meal-request scenarios</li>
+          <li>Terri conversation JSONs for meal-request and Airpoints claim scenarios</li>
+          <li>Current `rewriter-prompt-v3.md` and `rewriter-prompt-v4.md` drafts</li>
+        </ul>
+        <div class="callout">
+          <p><strong>Important structural note.</strong> The exported meal-request JSONs are still using a rewriter prompt written as if Oscar is only rewriting <strong>Claim Missing Airpoints</strong> responses. That should be treated as a real setup issue, not just a copy issue.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section">
+      <div class="eyebrow">Summary</div>
+      <h2>What the feedback converged on</h2>
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <div class="label">Strongest issue</div>
+          <div class="value">Repetition</div>
+          <div class="note">Repeated explanations, confirmations, and occasional re-greetings.</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Highest-risk issue</div>
+          <div class="value">Privacy</div>
+          <div class="note">Surfacing other passenger names too early in family flows.</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Most common tone miss</div>
+          <div class="value">Bad-news empathy</div>
+          <div class="note">Phrases like <strong>disappointing</strong> or <strong>nuisance</strong> landing awkwardly.</div>
+        </div>
+        <div class="summary-stat">
+          <div class="label">Main architecture risk</div>
+          <div class="value">Scope mismatch</div>
+          <div class="note">Claim-specific rewriter behaviour bleeding into SSR testing.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Priority matrix</div>
+        <h2>Top issues by likely owner</h2>
+        <p>This is the quickest view of what seems to be broken, why it matters, and which layer should own the next move.</p>
+      </div>
+
+      <div class="card table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Issue</th>
+              <th>Why it matters</th>
+              <th>Likely owner</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Meal-request examples are still using a Claim Missing Airpoints rewriter</strong> The prompt is written for the wrong service journey.</td>
+              <td>Makes tuning noisy and risks claim-specific logic bleeding into SSR flows.</td>
+              <td>Service Agent block and System Prompt</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><strong>Early certainty in claims</strong> Oscar implies a claim can proceed before diagnosis is complete.</td>
+              <td>Creates false momentum and can mislead customers who are already in a more complex state.</td>
+              <td>Service Agent block, with System Prompt reinforcement</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><strong>Repetition and over-confirmation</strong> Explanations, bullet confirmations, and reasons are repeated too often.</td>
+              <td>Makes Oscar feel padded, slower, and less capable.</td>
+              <td>System Prompt and Service Agent block</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><strong>Bad-news empathy drift</strong> The system reaches for softening language that does not sound right.</td>
+              <td>One of the clearest perception risks in the review set.</td>
+              <td>System Prompt</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><strong>Passenger privacy handling</strong> Other passenger names are surfaced before the customer discloses them.</td>
+              <td>Trust and policy risk, not just a wording issue.</td>
+              <td>Service Agent block</td>
+              <td>High</td>
+            </tr>
+            <tr>
+              <td><strong>Handover language feels procedural</strong> The route is often correct, but the phrasing still feels mechanical.</td>
+              <td>High-stakes moment. A poor handover reads as a brush-off.</td>
+              <td>Service Agent block and System Prompt</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td><strong>Successful flows add avoidable turns</strong> Oscar misses chances to be more proactive.</td>
+              <td>Customers still do more work than necessary even when the tone is acceptable.</td>
+              <td>Mostly Service Agent block, with some System Prompt support</td>
+              <td>Medium</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Detailed findings</div>
+        <h2>What to carry into the next iteration</h2>
+        <p>Each finding below combines the feedback call patterns with the exported JSON examples, then points to the most likely place to fix it.</p>
+      </div>
+
+      <div class="issue-grid">
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>1. The rewriter scope is structurally mismatched to the scenarios being tested</h3>
+          <div class="issue-block">
+            <div class="label">What is happening</div>
+            <p>The rewriter prompt in the exported JSONs is explicitly framed as a <strong>Claim Missing Airpoints</strong> rewriter, but it is also being used for meal-request scenarios.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Why it matters</div>
+            <p>This makes the outputs harder to diagnose. Some misses look like voice problems when they are really architecture problems.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Either create separate rewriters for different service journeys, or use one rewriter that is genuinely generic and gets the journey type from the Service Agent block.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>2. Oscar is too certain too early in claim flows</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Oscar often behaves as if a claim is ready to proceed before enough information has been gathered or before prior customer action has been checked.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Terri consistently pushed for a more neutral opener: <strong>I can take a look</strong>, not <strong>we can get the claim underway</strong>.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Default to investigation language first, and add an explicit route for customers who may already have claimed.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill service">Service Agent block</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>3. Repetition and over-confirmation are making Oscar feel effortful</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Oscar repeats reasons, repeats confirmation steps, re-lists details that were just provided, and sometimes re-greets mid-flow.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>All three sessions surfaced this. Terri was comfortable with one confirmation per conversation in many cases, and Lauren flagged repeated handover reasoning as well.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Strengthen anti-repetition rules, especially around re-greeting, repeated bullets, and repeated reasoning after a boundary has already been made clear.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>4. Bad-news empathy is still miscalibrated</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Oscar reaches for phrases like <strong>disappointing</strong>, <strong>fair enough</strong>, or <strong>nuisance</strong> in ways that feel slightly off-brand, too human, or mildly dismissive.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Ben and Terri both pushed back on <strong>disappointing</strong>. Lauren was open to acknowledgement, but wanted it framed as <strong>I hear you</strong>, not emotional mirroring.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Move from generic empathy guidance to narrower moment-based rules: brief acknowledgement, plain reason, next valid step.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill service">Service Agent block</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>4A. Ben's tonality point should be treated as an explicit design rule</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>The system currently implies this balance, but does not name it clearly enough: Oscar should not sound the same in every moment.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">What Ben was getting at</div>
+            <p>When the route is clear, Oscar should be confident, direct, and proactive. When the customer hits a limit, Oscar should stay warm enough not to sound harsh, patronising, or triggering.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Add an explicit calibrated-tonality rule to the voice system so Oscar is not tuned toward one averaged middle tone.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>5. Oscar sometimes explains the wrong thing, or too much of it</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>The reply often includes details that are technically related but not the main answer. The gluten-free snack example is the clearest version of this.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Ben explicitly called this out as drift. Terri also wanted the domestic-meal explanation reframed around the simpler truth that there is no meal service on domestic flights.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Tighten the Service Agent block so the primary reason arrives clearly, and stop the System Prompt from expanding into adjacent detail unless it directly helps the current answer.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>6. Claim closings are too thin on expectation-setting</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Claim outcomes are often mechanically correct, but the close does not reduce uncertainty. <strong>Nothing else you need to do right now</strong> is not enough when the customer has already been waiting.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Terri repeatedly asked for clearer timing, next steps, and what the customer should expect if the result does not land in time.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Standardise a claim close pattern: what has been done, what happens next, likely timeframe if supported, and whether the customer needs to act again.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill service">Service Agent block</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>7. Handover language is directionally right, but still too mechanical</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Oscar usually signals the right route, but the wording can still sound procedural, over-explained, or too choice-heavy.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Terri wanted more customer-relevant explanation. Lauren preferred softer path framing like <strong>here's what we could do for you</strong> rather than a hard two-option stance.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Create a handover pattern set by handover type, with clearer reason language and stronger continuity handling.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill high">High priority</span>
+          </div>
+          <h3>8. Privacy handling around other passengers needs a firmer rule</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>The family meal flow surfaces passenger names before the customer has disclosed them in the conversation.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Terri landed on a safer pattern: confirm that there are multiple passengers on the booking, then ask the customer who the change is for.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Do not surface other passenger names unless the customer has already disclosed them, or the authority rule explicitly allows it.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>9. Successful flows still create avoidable back and forth</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Even in positive journeys, Oscar often misses obvious proactive moves such as offering the return leg earlier or surfacing meal options sooner.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Lauren wanted a more proactive return-leg question. Terri also supported reducing back and forth where the next likely need is obvious.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Review successful service flows through the Service Agent block logic, not just the tone. Use visible booking context to reduce avoidable turns.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill service">Service Agent block</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>10. Brand expression should be more deliberate, not more decorative</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>The team does want more warmth and more Air New Zealand feel, but only in the right moments. The ask is not generic friendliness.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Terri supported controlled emoji and punctuation in upbeat closes. Lauren wanted more small brand moments in successful flows. Ben kept pulling the conversation back to confidence and momentum rather than decorative language.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Define where brand moments belong, especially in positive closes, and keep them out of frustrated or constrained moments.</p>
+          </div>
+        </article>
+
+        <article class="issue-card">
+          <div class="pill-row">
+            <span class="pill service">Service Agent block</span>
+            <span class="pill rewriter">System Prompt</span>
+            <span class="pill medium">Medium priority</span>
+          </div>
+          <h3>11. Oscar is sometimes promising help beyond the current supported scope</h3>
+          <div class="issue-block">
+            <div class="label">Pattern</div>
+            <p>Phrases like <strong>If there's anything else on the booking you want me to check, I can help with that</strong> are broader than the demonstrated capability.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Reviewer signal</div>
+            <p>Amy, Lauren, and Jared all pushed back on broad <strong>anything else</strong> language unless the experience can actually support it.</p>
+          </div>
+          <div class="issue-block">
+            <div class="label">Recommended change</div>
+            <p>Narrow forward-help language to the real supported scope, or reserve it for handover moments where it is genuinely true.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Work split</div>
+        <h2>Where the next work should sit</h2>
+        <p>The sessions point to a fairly clean division of labour for the next iteration.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="pill-row"><span class="pill rewriter">System Prompt</span></div>
+          <h3>System Prompt work</h3>
+          <ul>
+            <li>Add an explicit calibrated-tonality rule so Oscar can flex between warmth and momentum by moment.</li>
+            <li>Remove fake-empathy defaults.</li>
+            <li>Tighten acknowledgement rules for bad news.</li>
+            <li>Strengthen anti-repetition and anti-re-greeting behaviour.</li>
+            <li>Stop expanding into adjacent explanation not asked for.</li>
+            <li>Narrow follow-on help language to supported scope.</li>
+            <li>Define positive close patterns separately from constrained closes.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="pill-row"><span class="pill service">Service Agent block</span></div>
+          <h3>Service Agent block work</h3>
+          <ul>
+            <li>Fix the fact that the meal-request examples are still using a rewriter written for Claim Missing Airpoints.</li>
+            <li>Prevent early certainty in claim flows.</li>
+            <li>Improve expectation-setting fields for claim completion.</li>
+            <li>Make handoff reason and handoff type explicit in structured input.</li>
+            <li>Define privacy-safe passenger-name behaviour.</li>
+            <li>Pass enough prior-turn context for Oscar to avoid redundant confirmation.</li>
+            <li>Redesign success flows to reduce avoidable turns.</li>
+            <li>Decide where proactive next-step offers are beneficial.</li>
+            <li>Decide the tipping points for handover versus continued virtual handling.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="pill-row"><span class="pill service">Shared design decisions</span></div>
+          <h3>Shared design decisions</h3>
+          <p class="muted">These are still design decisions for the team to make, but in this implementation they will mostly be applied through Service Agent block changes or System Prompt changes.</p>
+          <ul>
+            <li>Clarify where brand moments belong and where they should be suppressed.</li>
+            <li>Decide how broad Oscar is allowed to sound when offering more help.</li>
+            <li>Decide which moments need softness and which should prioritise direct forward motion.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div class="eyebrow">Recommended sequence</div>
+        <h2>Suggested order for the next round</h2>
+        <p>This order keeps the team from over-tuning the voice before the underlying routing and scope issues are stable.</p>
+      </div>
+
+      <div class="next-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <h3>Resolve prompt setup first</h3>
+          <p>Decide whether Oscar is using one general rewriter or separate rewriters for different service journeys.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <h3>Fix the highest-risk Service Agent block behaviours</h3>
+          <p>Address early certainty in claims, privacy around passenger names, and over-broad help offers.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <h3>Retune the System Prompt against explicit rules</h3>
+          <p>Focus on acknowledgement, repetition, bad-news phrasing, handover wording, and positive closes.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">4</div>
+          <h3>Rerun a smaller evidence set</h3>
+          <p>Use one frustrated claim, one successful claim, one limitation flow, one successful SSR flow, and one privacy-driven handover.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <div class="eyebrow">Open decisions</div>
+        <h2>What still needs product or brand input</h2>
+        <ul>
+          <li>Should Oscar apologise in constraint flows, and if so, in which exact moments?</li>
+          <li>Should Oscar ever surface other passenger names before the customer does?</li>
+          <li>What exact sign-off style is approved for upbeat travel moments?</li>
+          <li>Which emojis, if any, are approved for Oscar and in which contexts?</li>
+          <li>How broad is Oscar allowed to sound when offering further help?</li>
+          <li>At what frustration point should handover be offered rather than inferred later?</li>
+        </ul>
+      </div>
+
+        <div class="card">
+          <div class="eyebrow">Bottom line</div>
+          <h2>What this means for the team</h2>
+          <p>The voice model is close enough to keep. The bigger problem is that it is currently being asked to compensate for the meal-request examples using the wrong rewriter, incomplete Service Agent block framing, weak handover design, and over-confirming interaction patterns.</p>
+          <p>In practical terms, most of the flow changes in this synthesis should be treated as Service Agent block changes, because that is where the turn strategy is being expressed in the current setup. The rest should be treated as System Prompt changes.</p>
+          <p>If those layers are separated and tightened in order, the next round of Oscar outputs should improve quickly and be much easier to judge cleanly.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+      <div>Internal working artefact - Oscar feedback synthesis</div>
+      <div>HTML version aligned to the established Air NZ document style</div>
+    </footer>
+  </div>
+</body>
+</html>

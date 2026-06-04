@@ -1,6 +1,6 @@
-# Airpoints Claim Live Demo Sequence v1
+# Airpoints Claim Test Sequence v1
 
-This is the tighter live-demo pack for Prompt Engine.
+This is the canonical Prompt Engine test sequence for Airpoints Claim.
 
 It uses one scenario from each category:
 
@@ -35,24 +35,26 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
-customer_facing_task: Start a standard retro claim because the travel is inside the normal claim window, and collect the key details needed to proceed.
+customer_facing_task: Acknowledge that the travel appears to be inside the normal retro-claim window, and collect the key details needed to check and progress the claim cleanly.
 facts_to_include:
 - travel happened 3 weeks ago
-- the claim is inside the normal retro-claim window
-- a few claim details are needed to continue
+- this looks like the standard retro-claim path
+- a few claim details are needed before the claim can be submitted
 next_action:
-- confirm the claim can be progressed
+- say it looks like the claim is inside the normal window
 - ask for the minimum useful claim details
+- do not imply the claim is already lodged or approved
 protected_values:
 - 3 weeks ago
 - claim window
 required_concepts:
-- inside the claim window
-- collect details to proceed
+- likely inside the claim window
+- collect details before submission
 do_not_include:
 - internal service labels
 - invented rejection language
 - unnecessary jargon
+- early-success language
 ```
 
 ### Turn 2
@@ -137,24 +139,26 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
-customer_facing_task: Start a clean retro claim for the missing return leg and collect the key details needed to proceed quickly.
+customer_facing_task: Acknowledge that only the return leg appears to be missing, and collect the details needed to check and submit the claim quickly.
 facts_to_include:
-- only the return leg is missing
-- the claim can be progressed
-- the required details are needed to continue
+- only the return leg appears to be missing
+- the likely path is a retro claim for that sector
+- the required details are still needed before submission
 next_action:
 - keep the response efficient and positive
-- ask only for the details needed to submit the claim
+- ask only for the details needed to confirm and submit the claim
+- do not imply the claim is already accepted
 protected_values:
 - return leg
 - missing
 required_concepts:
-- claim can proceed
-- collect details to continue
+- only the return leg appears missing
+- collect details before submission
 do_not_include:
 - internal service labels
 - unnecessary policy explanation
 - invented delay
+- premature success language
 ```
 
 ### Turn 2
@@ -292,7 +296,7 @@ do_not_include:
 
 ## Suggested call flow
 
-If you are walking the Air NZ team through this live, I would run the three conversations in this order:
+If you are walking the Air NZ team through this sequence, I would run the three conversations in this order:
 
 1. `Conv 5` to show the clean happy path
 2. `Conv 3` to show the standard retro-claim path under mild frustration

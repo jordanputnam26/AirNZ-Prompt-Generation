@@ -1,6 +1,6 @@
-# Add Meal Live Demo Sequence v1
+# Add Meal Test Sequence v1
 
-This is the tighter live-demo pack for Prompt Engine.
+This is the canonical Prompt Engine test sequence for Add Meal.
 
 It uses one scenario from each category:
 
@@ -31,9 +31,11 @@ facts_to_include:
 - route: Wellington to Auckland
 - flight date: 18 June
 - flight type: domestic
+- there is no meal service on this flight
 - special meal requests are not available on domestic Air New Zealand flights
 next_action:
-- explain the limitation clearly
+- explain clearly that there is no meal service on this flight
+- then make clear that there is no special-meal request path
 - do not offer a special-meal request path
 - move the conversation forward by making the situation clear
 protected_values:
@@ -44,6 +46,7 @@ protected_values:
 - domestic
 required_concepts:
 - booking has been identified
+- no meal service on this flight
 - domestic flights do not support special meal requests
 - set expectations up front
 do_not_include:
@@ -71,7 +74,6 @@ facts_to_include:
 - domestic flights provide water, tea, coffee, and a snack
 - there is no full meal service
 - there is no SSR meal-request system for this flight
-- some snacks may be gluten-free
 - the snack itself is not customisable
 next_action:
 - answer the challenge directly
@@ -83,7 +85,6 @@ protected_values:
 - tea
 - coffee
 - snack
-- gluten-free
 - not customisable
 required_concepts:
 - no full meal service
@@ -106,7 +107,7 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_3_CONFIRM_NO_SPECIAL_MEAL_PATH
-customer_facing_task: Confirm that the customer cannot request a special meal through the meal-request system, and offer the most grounded practical alternative.
+customer_facing_task: Answer the yes-or-no question clearly, confirm that a special meal cannot be requested on this flight, and offer the most grounded practical alternative.
 facts_to_include:
 - special meal requests are not available on this flight
 - the best practical option is to bring food with you
@@ -141,13 +142,13 @@ response_kind: business_result
 exit_point: EXIT_4_HANDLE_FRUSTRATION_AND_CLOSE
 customer_facing_task: Acknowledge the frustration, restate the limitation briefly, and close cleanly while offering help only if it is still genuinely useful.
 facts_to_include:
-- the news is disappointing
+- the customer is frustrated about the limit
 - fuller meal options are available on Tasman and longer routes
 - the current flight does not support special meal requests
 next_action:
-- acknowledge the frustration without claiming human feelings
-- keep the response brief
-- optionally offer further help in a low-pressure way
+- acknowledge the frustration briefly without claiming human feelings
+- keep the response brief and matter-of-fact
+- optionally offer further help only if it still adds value
 protected_values:
 - Tasman
 - longer routes
@@ -433,28 +434,26 @@ Service Contract:
 service_type: add_meal_request
 response_kind: ask_missing
 exit_point: EXIT_1_IDENTIFY_BOOKING_AND_REQUEST_MEAL_DETAILS
-customer_facing_task: Identify the booking, list the passengers visible on it, and ask what meals are being requested.
+customer_facing_task: Identify the booking and ask who the meal requests are for before surfacing other-passenger detail.
 facts_to_include:
 - route: Auckland to Los Angeles
 - flight date: 4 December
-- passengers: David, Sophie, Lily, and Jack
+- the Los Angeles booking has been identified
 next_action:
-- ask what meals are required
+- ask who the meals are for and what requests are needed
+- do not list other passenger names yet
 - keep the tone helpful and efficient
 protected_values:
 - Auckland
 - Los Angeles
 - 4 December
-- David
-- Sophie
-- Lily
-- Jack
 required_concepts:
 - booking identified
-- meal details needed to continue
+- passenger scope needs clarifying before meal action
 do_not_include:
 - internal service labels
 - promise that all meals can be added directly
+- other passenger names before they are needed
 - privacy explanation too early
 ```
 
@@ -470,13 +469,15 @@ response_kind: handover
 exit_point: EXIT_2_BOUNDARY_ON_OTHER_PASSENGERS
 customer_facing_task: Explain that the authenticated traveller's meal can be handled directly, but meals for the other passengers require a live agent because the authority check is out of scope here.
 facts_to_include:
-- Hindu non-vegetarian for David and Sophie
+- the authenticated traveller wants a Hindu non-vegetarian meal
+- Sophie also wants a Hindu non-vegetarian meal
 - child meals for Lily and Jack
 - Lily is 6 and Jack is 9
 - live agent required for meals requested on behalf of other passengers
 next_action:
 - explain the boundary clearly
-- offer the practical choice between adding David's now or handing all four to an agent
+- offer the practical choice between handling the authenticated traveller here or handing the whole family to an agent
+- do not treat booking ownership as enough authority on its own
 protected_values:
 - Hindu non-vegetarian
 - child meals
@@ -541,9 +542,8 @@ exit_point: EXIT_4_SUMMARISE_AND_TRANSFER
 customer_facing_task: Confirm the handover and summarise the booking, requested meals, and reason for transfer so the next agent can pick it up cleanly.
 facts_to_include:
 - booking: Auckland to Los Angeles, 4 December, four passengers
-- requested meals: Hindu non-vegetarian for David and Sophie
+- requested meals: Hindu non-vegetarian for the authenticated traveller and Sophie
 - requested meals: child meals for Lily and Jack
-- requested on both outbound and return
 - reason for handover: meals being added for passengers other than the authenticated user
 next_action:
 - summarise clearly
@@ -572,7 +572,7 @@ do_not_include:
 
 ## Suggested call flow
 
-If you are walking the Air NZ team through this live, I would run the three conversations in this order:
+If you are walking the Air NZ team through this sequence, I would run the three conversations in this order:
 
 1. `Conv 5` to show the clean happy path
 2. `Conv 1` to show explanation under frustration

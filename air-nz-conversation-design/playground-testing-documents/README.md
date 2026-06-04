@@ -32,11 +32,16 @@ Those belong elsewhere in this workspace so source evidence, interpreted guidanc
 - `Air_NZ_Oscar_User_Guide_v3.html`
 - `Air_NZ_Oscar_Evaluation_Checklist_v1.html`
 - `Air_NZ_Oscar_Structured_Test_Inputs_v1.md`
+- `Add_Meal_Live_Demo_Sequence_v1.md`
+- `Add_Meal_Live_Demo_Sequence_v1.html`
+- `Airpoints_Claim_Live_Demo_Sequence_v1.md`
+- `Airpoints_Claim_Live_Demo_Sequence_v1.html`
 
 Recommended current pack:
 - `Air_NZ_Oscar_User_Guide_v3.html`
 - `Air_NZ_Oscar_Evaluation_Checklist_v1.html`
-- `Air_NZ_Oscar_Structured_Test_Inputs_v1.md`
+- `Add_Meal_Live_Demo_Sequence_v1.html`
+- `Airpoints_Claim_Live_Demo_Sequence_v1.html`
 
 The `v3` guide is the current prompt-derived testing guide for Oscar on the `Claim Missing Airpoints` scenario. It supports both:
 - structured service-contract tests
@@ -49,6 +54,11 @@ The structured test inputs file contains the full copy-paste payloads for the fo
 - ask_confirm
 - execute
 - ineligible
+
+The two `Live_Demo_Sequence` files are now the canonical journey test packs, even though the filenames have not been changed yet. Use them as the single test sequence for:
+
+- Add Meal
+- Airpoints Claim
 
 ## Relationship To The Prompt Drafts
 

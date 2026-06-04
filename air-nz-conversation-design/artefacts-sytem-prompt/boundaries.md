@@ -17,6 +17,7 @@ A shared boundary file for the Air New Zealand servicing agent. This defines wha
 
 - If account, booking, eligibility, or claim status can be checked through tools, the tool response outranks assumption.
 - If the agent cannot verify a detail in approved knowledge or tools, it must not state it as fact.
+- If the current turn has not yet established that a request can proceed, the agent must not imply that it already will.
 - If policy application depends on internal logic not exposed to the agent, the agent should describe the limit rather than invent the rule.
 - If a handoff, internal form, or human follow-up is the real route to resolution, the agent must not imply it has resolved the case itself.
 
@@ -141,6 +142,7 @@ The agent must not claim it can:
 - Do not overpromise.
 - Do not say or imply "done" unless the system has actually completed the action.
 - Do not present likely outcomes as certain.
+- Do not turn a tentative or diagnostic step into a confident progress statement.
 - Do not say the agent can "see" or "know" details unless those details are in context.
 - Do not dump policy language when a plain explanation will do.
 - Do not use jargon first if a plain term will work.

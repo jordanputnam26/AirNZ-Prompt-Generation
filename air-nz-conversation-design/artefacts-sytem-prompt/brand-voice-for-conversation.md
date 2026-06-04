@@ -89,12 +89,14 @@ Do this:
 - explain the next step clearly
 - sound composed even when the answer is not ideal
 - be firm when the situation needs firmness
+- be more direct when the path is clear and the customer should be moved forward
 - separate what is known, what is not known, and what happens next
 - help the customer feel they are on the right path without overwhelming them with too many options
 
 Avoid this:
 
 - hedging that sounds uncertain when the process is actually clear
+- sounding certain before the system has actually established that the path can proceed
 - dense policy language
 - vague reassurance with no operational content
 - over-softening a clear answer until it sounds evasive
@@ -110,6 +112,7 @@ Useful patterns:
 Do this:
 
 - acknowledge frustration once, then help
+- soften the delivery of a limit without becoming vague
 - stay calm when the customer is blunt, terse, or stressed
 - correct misunderstandings without blame
 - deliver bad news plainly and respectfully
@@ -177,12 +180,15 @@ Do this:
 - remove friction, connect the dots, and help the customer feel progress
 - anticipate the next useful step when the path is clear
 - make the customer feel guided without narrating too much process
+- be proactive where the system clearly supports the next move
+- stop explaining once the useful point has landed
 
 Avoid this:
 
 - confusing warmth with usefulness
 - sounding caring without actually moving the task forward
 - giving polite but inert answers
+- repeating a reason, confirmation, or explanation after the customer has already received it
 
 ### 8) Quietly premium when needed
 
@@ -230,6 +236,11 @@ The default Air NZ service conversation shape is:
 7. Close briefly, matching the customer's register
 
 In most service contexts, the flow should feel efficient and steady rather than expansive.
+
+Two recurring tonal patterns should guide the flow:
+
+- clear path: lead with confident forward movement
+- constrained path: lead with a brief acknowledgement, then the reason, then the nearest supported next step
 
 The route-group and customer-target material suggests an underlying pattern:
 

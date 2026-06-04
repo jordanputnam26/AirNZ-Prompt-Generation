@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oscar — Airpoints Claim Live Demo Sequence v1</title>
+  <title>Oscar — Airpoints Claim Test Sequence v1</title>
   <style>
     :root {
       --background: oklch(1 0 0);
@@ -314,15 +314,15 @@
   <div class="shell">
     <section class="cover-panel">
       <div class="cover-kicker">Oscar Testing Pack</div>
-      <div class="cover-title">Airpoints Claim Live Demo Sequence v1</div>
+      <div class="cover-title">Airpoints Claim Test Sequence v1</div>
       <p class="cover-sub">
-        A call-ready Prompt Engine pack using one Frustrated, one Enthusiastic, and one Handover
+        A call-ready Prompt Engine test pack using one Frustrated, one Enthusiastic, and one Handover
         Airpoints claim scenario. Each block is designed to sit underneath the existing Oscar rewriter system prompt.
       </p>
       <div class="cover-meta">
         <div class="cover-meta-card">
           <div class="label">Scope</div>
-          <div class="value">Airpoints claim rewriter demos for live review with the Air NZ team.</div>
+          <div class="value">Airpoints claim rewriter test sequence for review with the Air NZ team.</div>
         </div>
         <div class="cover-meta-card">
           <div class="label">Format</div>
@@ -334,7 +334,7 @@
         </div>
       </div>
       <div class="cover-bottom">
-        <div class="left">Built to mirror the Oscar testing guide style, but focused on copy-paste demo inputs.</div>
+        <div class="left">Built to mirror the Oscar testing guide style, but focused on copy-paste test inputs.</div>
         <div class="right">Prompt Engine-ready<br />Oscar rewriter system prompt assumed</div>
       </div>
     </section>
@@ -342,7 +342,7 @@
     <section class="intro-grid">
       <div class="card">
         <h2>What This Pack Covers</h2>
-        <p>This is the tighter demo set for live walkthroughs. It keeps the runtime honest:</p>
+        <p>This is the canonical test set for Airpoints Claim. It keeps the runtime honest:</p>
         <ul class="meta-list">
           <li>`Latest Customer Message` plus `Service Contract` only</li>
           <li>No extra wrapper instructions</li>
@@ -394,24 +394,26 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
-customer_facing_task: Start a standard retro claim because the travel is inside the normal claim window, and collect the key details needed to proceed.
+customer_facing_task: Acknowledge that the travel appears to be inside the normal retro-claim window, and collect the key details needed to check and progress the claim cleanly.
 facts_to_include:
 - travel happened 3 weeks ago
-- the claim is inside the normal retro-claim window
-- a few claim details are needed to continue
+- this looks like the standard retro-claim path
+- a few claim details are needed before the claim can be submitted
 next_action:
-- confirm the claim can be progressed
+- say it looks like the claim is inside the normal window
 - ask for the minimum useful claim details
+- do not imply the claim is already lodged or approved
 protected_values:
 - 3 weeks ago
 - claim window
 required_concepts:
-- inside the claim window
-- collect details to proceed
+- likely inside the claim window
+- collect details before submission
 do_not_include:
 - internal service labels
 - invented rejection language
-- unnecessary jargon</pre></div>
+- unnecessary jargon
+- early-success language</pre></div>
 
       <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: booking ABC123, ticket 0861234567890, flight NZ101 on 2026-05-10
 
@@ -493,24 +495,26 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
-customer_facing_task: Start a clean retro claim for the missing return leg and collect the key details needed to proceed quickly.
+customer_facing_task: Acknowledge that only the return leg appears to be missing, and collect the details needed to check and submit the claim quickly.
 facts_to_include:
-- only the return leg is missing
-- the claim can be progressed
-- the required details are needed to continue
+- only the return leg appears to be missing
+- the likely path is a retro claim for that sector
+- the required details are still needed before submission
 next_action:
 - keep the response efficient and positive
-- ask only for the details needed to submit the claim
+- ask only for the details needed to confirm and submit the claim
+- do not imply the claim is already accepted
 protected_values:
 - return leg
 - missing
 required_concepts:
-- claim can proceed
-- collect details to continue
+- only the return leg appears missing
+- collect details before submission
 do_not_include:
 - internal service labels
 - unnecessary policy explanation
-- invented delay</pre></div>
+- invented delay
+- premature success language</pre></div>
 
       <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: yep it's booking XYZ789, ticket 0865555555555, AKL to YVR return, missing the way back
 
@@ -641,7 +645,7 @@ do_not_include:
 
     <section class="call-flow">
       <h2>Suggested Call Flow</h2>
-      <p>If you are walking the Air NZ team through this live, run the three conversations in this order:</p>
+      <p>If you are walking the Air NZ team through this sequence, run the three conversations in this order:</p>
       <ol class="flow-list">
         <li><strong>Conv 5</strong> to show the clean happy path</li>
         <li><strong>Conv 3</strong> to show the standard retro-claim path under mild frustration</li>
