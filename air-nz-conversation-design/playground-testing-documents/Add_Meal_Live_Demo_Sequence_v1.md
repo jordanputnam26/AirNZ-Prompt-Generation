@@ -31,11 +31,9 @@ facts_to_include:
 - route: Wellington to Auckland
 - flight date: 18 June
 - flight type: domestic
-- there is no meal service on this flight
-- special meal requests are not available on domestic Air New Zealand flights
+- domestic flights do not have a meal service, so there is no meal request path on this booking
 next_action:
-- explain clearly that there is no meal service on this flight
-- then make clear that there is no special-meal request path
+- lead with the domestic service model as the reason
 - do not offer a special-meal request path
 - move the conversation forward by making the situation clear
 protected_values:
@@ -46,8 +44,7 @@ protected_values:
 - domestic
 required_concepts:
 - booking has been identified
-- no meal service on this flight
-- domestic flights do not support special meal requests
+- domestic service model explained once
 - set expectations up front
 do_not_include:
 - internal service labels
@@ -68,33 +65,26 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_2_EXPLAIN_DOMESTIC_SERVICE_LIMIT
-customer_facing_task: Explain why a special meal cannot be added on this flight and clarify what is available on domestic services.
+customer_facing_task: Answer the challenge directly and make clear that the reason is the domestic service model, not the flight time.
 facts_to_include:
-- the flight is domestic
-- domestic flights provide water, tea, coffee, and a snack
-- there is no full meal service
-- there is no SSR meal-request system for this flight
-- the snack itself is not customisable
+- it is because the flight is domestic, not because it is 90 minutes
+- domestic flights do not have a meal service
 next_action:
-- answer the challenge directly
-- explain the service limit plainly
+- answer the time-versus-domestic misunderstanding directly
+- keep the explanation to the one point being challenged
 - do not reopen the meal-request path
 protected_values:
 - domestic
-- water
-- tea
-- coffee
-- snack
-- not customisable
 required_concepts:
-- no full meal service
-- no special meal request path
-- explain what is available instead
+- domestic, not flight length
+- no meal service on domestic flights
 do_not_include:
 - internal service labels
 - apology-heavy language
 - invented meal exceptions
 - new contact or escalation options
+- repeated explanation of what is onboard
+- repeated restatement of the same limit
 ```
 
 ### Turn 3
@@ -107,27 +97,28 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_3_CONFIRM_NO_SPECIAL_MEAL_PATH
-customer_facing_task: Answer the yes-or-no question clearly, confirm that a special meal cannot be requested on this flight, and offer the most grounded practical alternative.
+customer_facing_task: Answer the yes-or-no question clearly, confirm that meals cannot be requested on this flight, and offer one grounded practical alternative.
 facts_to_include:
-- special meal requests are not available on this flight
-- the best practical option is to bring food with you
+- meals cannot be requested on this flight
+- if the customer wants something specific, they can bring food with them
 - there is a food range airside at Wellington
 next_action:
 - answer the yes-or-no question directly
 - offer one practical alternative
-- keep the answer grounded and concise
+- keep the answer grounded, concise, and non-patronising
 protected_values:
 - Wellington
 - special meal system
 - food range airside
 required_concepts:
-- no special meal request path
+- no meal request path
 - practical alternative offered
 do_not_include:
 - internal service labels
 - invented exceptions
 - unsupported compensation or escalation paths
 - generic contact guidance
+- comparative framing like "best option" or "most practical option"
 ```
 
 ### Turn 4
@@ -140,28 +131,30 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_4_HANDLE_FRUSTRATION_AND_CLOSE
-customer_facing_task: Acknowledge the frustration, restate the limitation briefly, and close cleanly while offering help only if it is still genuinely useful.
+customer_facing_task: Acknowledge the frustration briefly and close in a slightly warmer, more natural way without reopening the explanation.
 facts_to_include:
 - the customer is frustrated about the limit
-- fuller meal options are available on Tasman and longer routes
-- the current flight does not support special meal requests
 next_action:
-- acknowledge the frustration briefly without claiming human feelings
-- keep the response brief and matter-of-fact
-- optionally offer further help only if it still adds value
+- use a short, natural acknowledgement of the reaction
+- keep the response brief and lightly warm
+- do not re-explain the limitation
+- offer further booking help in a low-pressure way
 protected_values:
-- Tasman
-- longer routes
 - special meal requests
 required_concepts:
 - acknowledge frustration
-- no change to the domestic-flight limitation
+- optional offer of booking help
 - close without pestering
 do_not_include:
 - internal service labels
 - fake empathy like "I understand how you feel"
 - invented exception handling
 - over-friendly filler
+- route comparisons
+- repeated explanation of the same limit
+- casual acknowledgements like "fair enough"
+- restating that nothing has changed
+- abstract phrasing like "it is a bit frustrating"
 ```
 
 ## 2. Enthusiastic — Conv 5
@@ -207,45 +200,18 @@ Latest Customer Message: yes!!
 Service Contract:
 
 service_type: add_meal_request
-response_kind: ask_missing
-exit_point: EXIT_2_NARROW_VEGETARIAN_PREFERENCE
-customer_facing_task: Explain that there are multiple vegetarian meal variants on long-haul flights and ask the customer whether they have a preference.
-facts_to_include:
-- there are multiple vegetarian options on this route
-- a preference is needed before the meal can be added
-next_action:
-- ask whether they have a preference
-- keep the explanation simple and friendly
-protected_values:
-- vegetarian options
-required_concepts:
-- more than one vegetarian option exists
-- preference needed to continue
-do_not_include:
-- internal service labels
-- full option list unless asked
-- generic filler
-```
-
-### Turn 3
-
-```text
-Latest Customer Message: oh i didn't know there were different ones, what are they?
-
-Service Contract:
-
-service_type: add_meal_request
 response_kind: business_result
-exit_point: EXIT_3_EXPLAIN_VEGETARIAN_OPTIONS
-customer_facing_task: Explain the main vegetarian meal variants available on this long-haul route in clear, customer-friendly language.
+exit_point: EXIT_2_NARROW_VEGETARIAN_PREFERENCE
+customer_facing_task: Proactively surface the main vegetarian meal variants available on this route, then ask which one the customer would like.
 facts_to_include:
 - Vegan vegetarian: no animal products
-- Lacto-ovo vegetarian: no meat or fish, includes dairy and eggs
-- Asian or Hindu vegetarian: Indian-style, often spicy, limited dairy
-- Oriental vegetarian: Chinese-style, no dairy
+- Lacto-ovo vegetarian: includes dairy and eggs
+- Asian or Hindu vegetarian: Indian-style vegetarian meal
+- Oriental vegetarian: Chinese-style vegetarian meal with no dairy
 next_action:
-- explain the options clearly
-- help the customer choose without overwhelming them
+- explain the options simply
+- ask which option the customer would like
+- keep the answer proactive, friendly, and easy to scan
 protected_values:
 - vegan vegetarian
 - lacto-ovo vegetarian
@@ -256,14 +222,13 @@ protected_values:
 - no animal products
 required_concepts:
 - there are several vegetarian variants
-- explain the differences simply
+- preference needed to continue
 do_not_include:
-- internal service labels unless genuinely useful
-- invented catering promises
-- pressure to choose immediately
+- internal service labels
+- generic filler
 ```
 
-### Turn 4
+### Turn 3
 
 ```text
 Latest Customer Message: oh interesting. i eat dairy and eggs so lacto ovo? what's that usually like
@@ -272,7 +237,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
-exit_point: EXIT_4_DESCRIBE_LACTO_OVO
+exit_point: EXIT_3_DESCRIBE_LACTO_OVO
 customer_facing_task: Confirm that lacto-ovo vegetarian sounds like the right fit and describe the meal style in broad, grounded terms.
 facts_to_include:
 - lacto-ovo vegetarian includes dairy and eggs
@@ -282,6 +247,7 @@ next_action:
 - answer the question directly
 - keep the description practical rather than overpromising
 protected_values:
+- lacto-ovo vegetarian
 - dairy
 - eggs
 - pasta or rice-based main
@@ -296,7 +262,7 @@ do_not_include:
 - invented premium detail
 ```
 
-### Turn 5
+### Turn 4
 
 ```text
 Latest Customer Message: yeah that sounds great, let's do that
@@ -305,7 +271,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
-exit_point: EXIT_5_ADD_OUTBOUND_MEAL
+exit_point: EXIT_4_ADD_OUTBOUND_MEAL
 customer_facing_task: Confirm that the lacto-ovo vegetarian meal has been added to the outbound flight.
 facts_to_include:
 - meal type: lacto-ovo vegetarian
@@ -328,7 +294,7 @@ do_not_include:
 - unnecessary recap
 ```
 
-### Turn 6
+### Turn 5
 
 ```text
 Latest Customer Message: and is it on the return too or do i need to do it again
@@ -337,7 +303,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: ask_confirm
-exit_point: EXIT_6_CHECK_RETURN_AND_CONFIRM_ADD
+exit_point: EXIT_5_CHECK_RETURN_AND_CONFIRM_ADD
 customer_facing_task: Confirm that a return booking exists and ask whether the customer wants the same meal added there as well.
 facts_to_include:
 - return route: Tokyo Narita to Auckland
@@ -360,7 +326,7 @@ do_not_include:
 - extra unrelated advice
 ```
 
-### Turn 7
+### Turn 6
 
 ```text
 Latest Customer Message: yes please!!
@@ -369,7 +335,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
-exit_point: EXIT_7_ADD_RETURN_MEAL
+exit_point: EXIT_6_ADD_RETURN_MEAL
 customer_facing_task: Confirm that the same meal has been added to the return flight as well.
 facts_to_include:
 - meal type: lacto-ovo vegetarian
@@ -379,9 +345,9 @@ next_action:
 - confirm the return update clearly
 - mention Manage Booking if useful
 protected_values:
-- lacto-ovo vegetarian
 - Tokyo Narita
 - Auckland
+- lacto-ovo vegetarian
 - both flights
 required_concepts:
 - return meal added
@@ -392,7 +358,7 @@ do_not_include:
 - overlong explanation
 ```
 
-### Turn 8
+### Turn 7
 
 ```text
 Latest Customer Message: amazing thanks so much, first long haul so this is all new
@@ -401,7 +367,7 @@ Service Contract:
 
 service_type: add_meal_request
 response_kind: cancelled
-exit_point: EXIT_8_WARM_CLOSE
+exit_point: EXIT_7_WARM_CLOSE
 customer_facing_task: Close warmly and confidently, matching the customer's positive energy without becoming cheesy.
 facts_to_include:
 - the customer is flying long-haul for the first time
@@ -470,9 +436,7 @@ exit_point: EXIT_2_BOUNDARY_ON_OTHER_PASSENGERS
 customer_facing_task: Explain that the authenticated traveller's meal can be handled directly, but meals for the other passengers require a live agent because the authority check is out of scope here.
 facts_to_include:
 - the authenticated traveller wants a Hindu non-vegetarian meal
-- Sophie also wants a Hindu non-vegetarian meal
-- child meals for Lily and Jack
-- Lily is 6 and Jack is 9
+- the other passengers need meal changes as well
 - live agent required for meals requested on behalf of other passengers
 next_action:
 - explain the boundary clearly
@@ -480,11 +444,6 @@ next_action:
 - do not treat booking ownership as enough authority on its own
 protected_values:
 - Hindu non-vegetarian
-- child meals
-- Lily
-- Jack
-- 6
-- 9
 - live agent
 required_concepts:
 - authenticated traveller can be handled directly
@@ -542,8 +501,7 @@ exit_point: EXIT_4_SUMMARISE_AND_TRANSFER
 customer_facing_task: Confirm the handover and summarise the booking, requested meals, and reason for transfer so the next agent can pick it up cleanly.
 facts_to_include:
 - booking: Auckland to Los Angeles, 4 December, four passengers
-- requested meals: Hindu non-vegetarian for the authenticated traveller and Sophie
-- requested meals: child meals for Lily and Jack
+- requested meals include one Hindu non-vegetarian request for the authenticated traveller plus meal changes for the other passengers
 - reason for handover: meals being added for passengers other than the authenticated user
 next_action:
 - summarise clearly
@@ -553,12 +511,7 @@ protected_values:
 - Auckland
 - Los Angeles
 - 4 December
-- David
-- Sophie
-- Lily
-- Jack
 - Hindu non-vegetarian
-- child meals
 - authenticated user
 required_concepts:
 - summary passed through

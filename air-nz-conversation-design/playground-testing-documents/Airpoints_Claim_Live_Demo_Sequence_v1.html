@@ -456,11 +456,11 @@ exit_point: EXIT_3_SUBMIT_STANDARD_RETRO_CLAIM
 customer_facing_task: Confirm that the retro claim has been submitted and set a grounded expectation for what happens next.
 facts_to_include:
 - the retro claim has been submitted
-- the submitted details match the confirmed booking, ticket, flight number, and date
 - the customer should now wait for the claim to be processed
 next_action:
 - confirm the submission clearly
 - keep the next-step expectation simple and practical
+- do not re-list the full claim details unless clarity is needed
 protected_values:
 - ABC123
 - 0861234567890
@@ -558,10 +558,11 @@ exit_point: EXIT_3_SUBMIT_CLEAN_RETRO_CLAIM
 customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly and close on a positive, low-friction note.
 facts_to_include:
 - the claim for the missing return leg has been submitted
-- the submitted details match the confirmed booking and ticket
+- no further customer action is needed right now
 next_action:
 - confirm submission clearly
 - keep the tone positive and concise
+- do not re-list the claim details unless clarity is needed
 protected_values:
 - XYZ789
 - 0865555555555
