@@ -25,17 +25,20 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_1_IDENTIFY_BOOKING_AND_SET_EXPECTATIONS
-customer_facing_task: Acknowledge the request, surface the relevant domestic booking context, and set expectations that special meal requests are not available on domestic flights.
+customer_facing_task: Acknowledge the request, surface the relevant domestic booking context, explain the domestic service model calmly, and make clear that a vegetarian meal cannot be added on this flight.
 facts_to_include:
 - customer name: Megan
 - route: Wellington to Auckland
 - flight date: 18 June
 - flight type: domestic
-- domestic flights do not have a meal service, so there is no meal request path on this booking
+- domestic flights do not have a meal service onboard
+- a vegetarian meal cannot be added on this flight
 next_action:
-- lead with the domestic service model as the reason
+- acknowledge the request first
+- explain the domestic service model before stating the limitation
+- keep the tone calm and matter-of-fact
 - do not offer a special-meal request path
-- move the conversation forward by making the situation clear
+- move the conversation forward by making the situation clear without sounding abrupt
 protected_values:
 - Megan
 - Wellington
@@ -45,6 +48,7 @@ protected_values:
 required_concepts:
 - booking has been identified
 - domestic service model explained once
+- limitation lands after the reason
 - set expectations up front
 do_not_include:
 - internal service labels
@@ -56,28 +60,31 @@ do_not_include:
 ### Turn 2
 
 ```text
-Latest Customer Message: what
+Latest Customer Message: what do you mean
 
-it's a 90 min flight
+it's only 90 mins
 
 Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_2_EXPLAIN_DOMESTIC_SERVICE_LIMIT
-customer_facing_task: Answer the challenge directly and make clear that the reason is the domestic service model, not the flight time.
+customer_facing_task: Clarify calmly that the reason is the domestic service model, rather than the flight time, and keep the explanation brief.
 facts_to_include:
-- it is because the flight is domestic, not because it is 90 minutes
+- the reason is that this is a domestic flight
 - domestic flights do not have a meal service
+- a vegetarian meal cannot be added on this flight
 next_action:
-- answer the time-versus-domestic misunderstanding directly
-- keep the explanation to the one point being challenged
+- clarify the reason calmly
+- avoid sounding corrective or argumentative
+- keep the explanation to the one point being asked about
 - do not reopen the meal-request path
 protected_values:
 - domestic
 required_concepts:
-- domestic, not flight length
+- domestic flight is the reason
 - no meal service on domestic flights
+- limitation explained briefly
 do_not_include:
 - internal service labels
 - apology-heavy language
@@ -90,7 +97,7 @@ do_not_include:
 ### Turn 3
 
 ```text
-Latest Customer Message: so i can't request anything
+Latest Customer Message: so i can't request anything at all
 
 Service Contract:
 
@@ -100,18 +107,23 @@ exit_point: EXIT_3_CONFIRM_NO_SPECIAL_MEAL_PATH
 customer_facing_task: Answer the yes-or-no question clearly, confirm that meals cannot be requested on this flight, and offer one grounded practical alternative.
 facts_to_include:
 - meals cannot be requested on this flight
+- tea, coffee, and a snack are available onboard
 - if the customer wants something specific, they can bring food with them
 - there is a food range airside at Wellington
 next_action:
 - answer the yes-or-no question directly
 - offer one practical alternative
+- mention what is available onboard in one simple line
 - keep the answer grounded, concise, and non-patronising
 protected_values:
 - Wellington
-- special meal system
+- tea
+- coffee
+- snack
 - food range airside
 required_concepts:
 - no meal request path
+- onboard offering mentioned
 - practical alternative offered
 do_not_include:
 - internal service labels
@@ -124,25 +136,29 @@ do_not_include:
 ### Turn 4
 
 ```text
-Latest Customer Message: that's annoying
+Latest Customer Message: that's pretty annoying
 
 Service Contract:
 
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_4_HANDLE_FRUSTRATION_AND_CLOSE
-customer_facing_task: Acknowledge the frustration briefly and close in a slightly warmer, more natural way without reopening the explanation.
+customer_facing_task: Acknowledge the frustration briefly, offer one light practical close, and ask if there is anything else Oscar can help with on this booking.
 facts_to_include:
 - the customer is frustrated about the limit
+- if the customer wants something specific, they can bring it with them or pick something up before boarding
 next_action:
 - use a short, natural acknowledgement of the reaction
 - keep the response brief and lightly warm
 - do not re-explain the limitation
-- if offering more help, keep it narrow to this booking and only if it is genuinely useful
+- offer one practical close if it still helps
+- ask if there is anything else you can help with on this booking
 protected_values:
 - special meal requests
 required_concepts:
 - acknowledge frustration
+- practical alternative lightly available
+- further help offered on this booking
 - close without pestering
 do_not_include:
 - internal service labels
@@ -154,7 +170,7 @@ do_not_include:
 - casual acknowledgements like "fair enough"
 - restating that nothing has changed
 - abstract phrasing like "it is a bit frustrating"
-- broad follow-on offers like "anything else on your booking"
+- broad follow-on offers unrelated to this booking
 ```
 
 ## 2. Enthusiastic — Conv 5
@@ -174,9 +190,11 @@ response_kind: ask_confirm
 exit_point: EXIT_1_IDENTIFY_LONG_HAUL_BOOKING
 customer_facing_task: Respond warmly, identify the likely booking, and ask the customer to confirm the flight before making any changes.
 facts_to_include:
+- the customer is flying to Tokyo for the first time
 - route: Auckland to Tokyo Narita
 - flight date: 8 October
 next_action:
+- briefly acknowledge the first trip to Tokyo
 - confirm this is the correct booking
 - keep the tone upbeat and grounded
 protected_values:
@@ -185,6 +203,7 @@ protected_values:
 - 8 October
 required_concepts:
 - booking identified
+- first-trip excitement lightly acknowledged
 - confirmation needed before proceeding
 do_not_include:
 - internal service labels
@@ -338,16 +357,19 @@ Service Contract:
 service_type: add_meal_request
 response_kind: cancelled
 exit_point: EXIT_6_WARM_CLOSE
-customer_facing_task: Close warmly and confidently, matching the customer's positive energy without becoming cheesy.
+customer_facing_task: Close warmly and confidently, acknowledge the first long-haul milestone, and offer light further help if it feels natural.
 facts_to_include:
 - the customer is flying long-haul for the first time
 next_action:
 - close on a positive note
+- acknowledge the first long-haul milestone briefly
+- offer light further help without reopening the task
 - do not reopen the task unnecessarily
 protected_values:
 - first long haul
 required_concepts:
 - acknowledge the excitement
+- further help lightly offered
 - finish cleanly
 do_not_include:
 - internal service labels
@@ -370,15 +392,17 @@ Service Contract:
 service_type: add_meal_request
 response_kind: handover
 exit_point: EXIT_1_IDENTIFY_CUTOFF_LIMIT
-customer_facing_task: Identify the booking, make clear that the request is inside the non-NZ 48-hour cutoff window, and explain that the standard add path is no longer available.
+customer_facing_task: Identify the booking, make clear that the request is inside the non-NZ 48-hour cutoff window, explain that the standard add path is no longer available, and give one practical alternative.
 facts_to_include:
 - route: Singapore to Auckland
 - departure: tomorrow at 14:30
 - this is roughly 28 hours away
 - for flights departing non-NZ airports, the meal-request cutoff is 48 hours before departure
+- if the customer needs something specific, they can bring food with them
 next_action:
 - explain the cutoff clearly and early
 - make clear the standard add path is no longer available
+- give one grounded practical alternative
 - keep the answer calm and matter-of-fact
 protected_values:
 - Singapore
@@ -389,6 +413,7 @@ required_concepts:
 - booking identified
 - inside the cutoff window
 - standard add no longer available
+- practical alternative offered
 do_not_include:
 - internal service labels
 - invented workaround
@@ -405,22 +430,20 @@ Service Contract:
 service_type: add_meal_request
 response_kind: handover
 exit_point: EXIT_2_HANDOVER_FOR_BEST_EFFORT
-customer_facing_task: Acknowledge the frustration, explain that Oscar cannot add the meal through the standard flow anymore, and hand over for a best-effort request to catering.
+customer_facing_task: Acknowledge the frustration, explain that Oscar cannot add the meal through the standard flow anymore, and offer to pass it to a Customer Care team member to see what is still possible.
 facts_to_include:
 - Oscar cannot add the meal through the standard flow at this point
-- a live agent can try a best-effort request direct to catering
-- if it can be done, the live agent will arrange it
+- a Customer Care team member can see what is still possible
+- if anything can still be arranged, the Customer Care team member will take it from there
 next_action:
 - answer the pushback directly
-- explain the handover path in practical language
+- explain the pass-across path in practical language
 - offer to pass the request across now
 protected_values:
-- live agent
-- best-effort request
-- catering
+- Customer Care team member
 required_concepts:
 - standard path unavailable
-- best-effort handover available
+- Customer Care team member path available
 - practical next step offered
 do_not_include:
 - internal service labels
@@ -438,25 +461,23 @@ Service Contract:
 service_type: add_meal_request
 response_kind: handover
 exit_point: EXIT_3_SUMMARISE_AND_TRANSFER
-customer_facing_task: Confirm the handover and summarise the booking, requested meal, and reason for transfer so the live agent can pick it up cleanly.
+customer_facing_task: Confirm that the request is being passed across and set a calm best-effort expectation without showing an internal transfer summary.
 facts_to_include:
-- booking: Singapore to Auckland, departing tomorrow at 14:30
-- requested meal: vegetarian meal
-- passenger: Emma (authenticated user)
-- reason for handover: inside the 48-hour cutoff for a non-NZ departure
+- the request is being passed across now
+- it relates to the Singapore to Auckland flight departing tomorrow at 14:30
+- the request is for a vegetarian meal
+- the reason is that the request is inside the 48-hour cutoff for a non-NZ departure
 next_action:
-- summarise clearly
-- confirm the live transfer
+- confirm the pass-across clearly
 - set a calm best-effort expectation
 protected_values:
 - Singapore
 - Auckland
 - tomorrow at 14:30
 - vegetarian meal
-- Emma
 required_concepts:
-- summary passed through
-- live agent taking over
+- request passed across
+- Customer Care team member taking over
 - best-effort attempt
 do_not_include:
 - internal service labels

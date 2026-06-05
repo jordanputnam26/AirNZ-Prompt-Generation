@@ -134,7 +134,7 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: business_result
 exit_point: EXIT_4_SUBMIT_STANDARD_RETRO_CLAIM
-customer_facing_task: Confirm that the retro claim has been submitted and set a grounded expectation for what happens next.
+customer_facing_task: Confirm that the retro claim has been submitted, set a grounded expectation for what happens next, and close with a light offer of further help.
 facts_to_include:
 - the retro claim has been submitted
 - the claim is now with the Airpoints team for processing
@@ -142,6 +142,7 @@ facts_to_include:
 next_action:
 - confirm the submission clearly
 - explain what happens next in plain language
+- offer brief further help without reopening the claim flow
 - do not re-list the full claim details unless clarity is needed
 protected_values:
 - ABC123
@@ -152,10 +153,12 @@ required_concepts:
 - claim submitted
 - now with the team for processing
 - nothing else needed right now
+- further help lightly offered
 do_not_include:
 - internal service labels
 - invented processing guarantees
 - invented extra contact paths
+- pushy or overly scripted closing language
 ```
 
 ## 2. Enthusiastic — Conv 5
@@ -173,19 +176,20 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
-customer_facing_task: Acknowledge that only the return leg appears to be missing, and collect the details needed to look into it properly before moving to a claim.
+customer_facing_task: Acknowledge what the customer has described about the missing return leg, and collect the details needed to look into it properly before moving to a claim.
 facts_to_include:
-- only the return leg appears to be missing
+- the customer says the return leg did not credit
 - the required details are still needed to look into it properly
 next_action:
 - keep the response efficient and positive
+- acknowledge the issue as described by the customer
 - ask only for the details needed to check it properly
 - do not imply the claim is already accepted or definitely the next step
 protected_values:
 - return leg
 - missing
 required_concepts:
-- only the return leg appears missing
+- return-leg issue acknowledged as customer-reported
 - collect details before deciding the next step
 do_not_include:
 - internal service labels
@@ -274,7 +278,7 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: business_result
 exit_point: EXIT_4_SUBMIT_CLEAN_RETRO_CLAIM
-customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly and close on a positive, low-friction note.
+customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly, explain what happens next, and close with a light offer of further help.
 facts_to_include:
 - the claim for the missing return leg has been submitted
 - the claim is now with the Airpoints team for processing
@@ -282,6 +286,7 @@ facts_to_include:
 next_action:
 - confirm submission clearly
 - explain the next step briefly and keep the tone positive and concise
+- offer brief further help without reopening the claim flow
 - do not re-list the claim details unless clarity is needed
 protected_values:
 - XYZ789
@@ -293,10 +298,12 @@ required_concepts:
 - claim submitted successfully
 - now with the team for processing
 - no further customer action needed right now
+- further help lightly offered
 do_not_include:
 - internal service labels
 - invented extra requirements
 - overlong recap
+- pushy or overly scripted closing language
 ```
 
 ## 3. Handover — Conv 8
