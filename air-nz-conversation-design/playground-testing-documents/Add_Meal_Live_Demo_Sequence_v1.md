@@ -269,6 +269,7 @@ facts_to_include:
 next_action:
 - answer the question directly
 - keep the description practical rather than overpromising
+- if offering to add the meal from here, phrase that as a real question
 protected_values:
 - lacto-ovo vegetarian
 - dairy
@@ -279,6 +280,7 @@ protected_values:
 required_concepts:
 - this option fits the customer's stated preference
 - describe the likely meal style
+- offer-to-proceed question is clearly phrased if used
 do_not_include:
 - internal service labels
 - guarantee of exact catering contents

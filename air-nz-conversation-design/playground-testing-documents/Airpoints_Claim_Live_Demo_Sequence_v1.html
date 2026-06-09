@@ -392,60 +392,71 @@
 Service Contract:
 
 service_type: claim_missing_airpoints
-response_kind: ask_missing
+response_kind: ask_confirm
 exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
-customer_facing_task: Acknowledge the missing points and ask for the simplest details needed to look into it before moving toward a claim.
+customer_facing_task: Acknowledge the missing points, surface a short list of likely Air New Zealand flights from around 3 weeks ago, and ask the customer to choose the right one.
 facts_to_include:
 - travel happened 3 weeks ago
-- a few details are needed to look into it properly
+- likely option 1: NZ101 on 2026-05-10, Auckland to Sydney
+- likely option 2: NZ214 on 2026-05-12, Auckland to Wellington
+- likely option 3: NZ675 on 2026-05-16, Queenstown to Auckland
 next_action:
-- say you can look into it once the details are in
-- ask for the easiest useful travel details first
-- avoid defaulting straight to a long list of identifiers if a simpler starting point will do
+- say you have pulled up a few likely recent Air New Zealand flights from around that time
+- present the options clearly as a short list
+- ask the customer to choose the right flight
+- keep the shortlist easy to scan
 - do not imply a claim is already lodged, approved, or definitely the next step
 protected_values:
 - 3 weeks ago
+- NZ101
+- NZ214
+- NZ675
+- 2026-05-10
+- 2026-05-12
+- 2026-05-16
+- Auckland
+- Sydney
+- Wellington
+- Queenstown
 required_concepts:
-- can look into it
-- collect details before deciding the next step
+- likely recent flights surfaced
+- customer selects one
+- no full identifier hunt yet
 do_not_include:
 - internal service labels
 - invented rejection language
 - unnecessary jargon
 - early-success language
-- claim-underway language before the details are checked</pre></div>
+- claim-underway language before the details are checked
+- request for booking reference or ticket number before selection</pre></div>
 
-      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: booking ABC123, ticket 0861234567890, flight NZ101 on 2026-05-10
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: nz101 on 2026-05-10 is the right one
 
 Service Contract:
 
 service_type: claim_missing_airpoints
 response_kind: business_result
-exit_point: EXIT_2_ACKNOWLEDGE_DETAILS_AND_CHECK
-customer_facing_task: Acknowledge the details, confirm you have what you need to check the missing points, and keep the conversation moving without a redundant confirmation step.
+exit_point: EXIT_2_CONFIRM_SELECTED_FLIGHT_AND_CHECK
+customer_facing_task: Confirm that the selected flight is enough to check the case properly and keep the conversation moving.
 facts_to_include:
-- booking reference: ABC123
-- ticket number: 0861234567890
-- flight number: NZ101
-- flight date: 2026-05-10
+- selected flight: NZ101 on 2026-05-10, Auckland to Sydney
+- that is enough detail to check the missing Airpoints properly
 next_action:
-- acknowledge that the details are in
-- say you have what you need to check now
-- do not ask the customer to confirm details they just typed unless something is unclear
+- acknowledge the selected flight clearly
+- say that is enough to check now
+- keep the momentum calm and efficient
 protected_values:
-- ABC123
-- 0861234567890
 - NZ101
 - 2026-05-10
+- Auckland
+- Sydney
 required_concepts:
-- details received
+- selected flight confirmed
 - enough information to check
-- no extra confirmation step
 do_not_include:
 - internal service labels
-- full detail recap unless clarity is needed
 - invented status outcome
-- confirmation for confirmation's sake</pre></div>
+- request for more identifiers unless something is genuinely missing</pre></div>
 
       <div class="turn"><div class="turn-head"><span class="turn-num">3</span><div class="turn-title">Turn 3</div></div><pre>Latest Customer Message: okay, thanks
 
@@ -454,19 +465,19 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_confirm
 exit_point: EXIT_3_STANDARD_RETRO_CLAIM_ELIGIBLE
-customer_facing_task: Confirm that the flight looks eligible for an Airpoints claim and ask whether the customer wants you to submit it.
+customer_facing_task: Confirm that the selected flight looks eligible for an Airpoints™ claim and ask whether the customer wants you to submit it.
 facts_to_include:
-- based on the details provided, this flight looks eligible for an Airpoints claim
+- based on the details provided, this flight looks eligible for an Airpoints™ claim
 - Oscar can submit the claim from here if the customer wants
 next_action:
 - say the flight looks eligible
 - ask directly whether the customer wants you to submit the claim
 - keep the question clear and low-pressure
 protected_values:
-- ABC123
-- 0861234567890
 - NZ101
 - 2026-05-10
+- Auckland
+- Sydney
 required_concepts:
 - eligible for claim
 - customer choice to submit
@@ -495,10 +506,10 @@ next_action:
 - offer brief further help without reopening the claim flow
 - do not re-list the full claim details unless clarity is needed
 protected_values:
-- ABC123
-- 0861234567890
 - NZ101
 - 2026-05-10
+- Auckland
+- Sydney
 required_concepts:
 - claim submitted
 - now with the team for processing
@@ -535,18 +546,25 @@ exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
 customer_facing_task: Acknowledge what the customer has described about the missing return leg, and collect the details needed to look into it properly before moving to a claim.
 facts_to_include:
 - the customer says the return leg did not credit
-- the required details are still needed to look into it properly
+- the simplest return-leg detail is enough to start
+- a booking reference can look like ABC123
+- an e-ticket number will usually start with 086...
+- if needed later, an Airpoints™ number can look like a number starting with 12...
 next_action:
 - keep the response efficient and positive
 - acknowledge the issue as described by the customer
-- ask for the simplest useful return-leg details first
-- avoid defaulting straight to a long list of identifiers if a simpler starting point will do
+- explain what kind of detail helps
+- give a useful example of the identifier shape
+- ask for the simplest useful return-leg detail first
+- make clear the examples are there to help recognise the right detail
+- avoid a long checklist unless it is genuinely needed
 - do not imply the claim is already accepted or definitely the next step
 protected_values:
 - return leg
 - missing
 required_concepts:
 - return-leg issue acknowledged as customer-reported
+- examples help the customer recognise the right detail
 - collect details before deciding the next step
 do_not_include:
 - internal service labels
@@ -554,7 +572,7 @@ do_not_include:
 - invented delay
 - premature success language</pre></div>
 
-      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: yep it's booking XYZ789, ticket 0865555555555, AKL to YVR return, missing the way back
+      <div class="turn"><div class="turn-head"><span class="turn-num">2</span><div class="turn-title">Turn 2</div></div><pre>Latest Customer Message: yep it's the yvr to akl return on 2026-10-22. booking XYZ789 and the ticket number is 0865555555555
 
 Service Contract:
 
@@ -565,7 +583,8 @@ customer_facing_task: Acknowledge the return-leg details, confirm you have what 
 facts_to_include:
 - booking reference: XYZ789
 - ticket number: 0865555555555
-- route: AKL to YVR return
+- route: YVR to AKL return
+- flight date: 2026-10-22
 - missing sector: return leg
 next_action:
 - acknowledge that the details are in
@@ -576,6 +595,7 @@ protected_values:
 - 0865555555555
 - AKL
 - YVR
+- 2026-10-22
 - return leg
 required_concepts:
 - details received
@@ -594,9 +614,9 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_confirm
 exit_point: EXIT_3_CLEAN_RETRO_CLAIM_ELIGIBLE
-customer_facing_task: Confirm that the missing return leg looks eligible for an Airpoints claim and ask whether the customer wants you to submit it.
+customer_facing_task: Confirm that the missing return leg looks eligible for an Airpoints™ claim and ask whether the customer wants you to submit it.
 facts_to_include:
-- based on the details provided, the missing return leg looks eligible for an Airpoints claim
+- based on the details provided, the missing return leg looks eligible for an Airpoints™ claim
 - Oscar can submit the claim from here if the customer wants
 next_action:
 - say the missing return leg looks eligible
