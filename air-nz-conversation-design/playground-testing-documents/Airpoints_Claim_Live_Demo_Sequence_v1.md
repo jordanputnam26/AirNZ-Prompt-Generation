@@ -22,7 +22,7 @@ That means these sequences are:
 
 ## 1. Frustrated — Conv 3
 
-- Conversation: `Standard retro claim — flown 3 weeks ago`
+- Conversation: `Standard Airpoints claim — flown 3 weeks ago`
 - Trigger: `Customer flew Air NZ 3 weeks ago, points did not credit automatically.`
 
 ### Turn 1
@@ -35,13 +35,14 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_missing
 exit_point: EXIT_1_STANDARD_RETRO_CLAIM_START
-customer_facing_task: Acknowledge the missing points and collect the minimum details needed to look into it cleanly before moving to a claim.
+customer_facing_task: Acknowledge the missing points and ask for the simplest details needed to look into it before moving toward a claim.
 facts_to_include:
 - travel happened 3 weeks ago
 - a few details are needed to look into it properly
 next_action:
 - say you can look into it once the details are in
-- ask for the minimum useful claim details
+- ask for the easiest useful travel details first
+- avoid defaulting straight to a long list of identifiers if a simpler starting point will do
 - do not imply a claim is already lodged, approved, or definitely the next step
 protected_values:
 - 3 weeks ago
@@ -102,9 +103,9 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_confirm
 exit_point: EXIT_3_STANDARD_RETRO_CLAIM_ELIGIBLE
-customer_facing_task: Confirm that the flight looks eligible for a standard retro claim and ask whether the customer wants you to submit it.
+customer_facing_task: Confirm that the flight looks eligible for an Airpoints claim and ask whether the customer wants you to submit it.
 facts_to_include:
-- based on the details provided, this flight looks eligible for a standard retro claim
+- based on the details provided, this flight looks eligible for an Airpoints claim
 - Oscar can submit the claim from here if the customer wants
 next_action:
 - say the flight looks eligible
@@ -134,14 +135,16 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: business_result
 exit_point: EXIT_4_SUBMIT_STANDARD_RETRO_CLAIM
-customer_facing_task: Confirm that the retro claim has been submitted, set a grounded expectation for what happens next, and close with a light offer of further help.
+customer_facing_task: Confirm that the Airpoints claim has been submitted, set a grounded expectation for what happens next, and close with a light offer of further help.
 facts_to_include:
-- the retro claim has been submitted
+- the Airpoints claim has been submitted
 - the claim is now with the Airpoints team for processing
 - no more details are needed from the customer right now
+- the customer can keep an eye on their Airpoints activity for the missing points to appear
 next_action:
 - confirm the submission clearly
 - explain what happens next in plain language
+- give one grounded way to check progress without inventing a fixed timeframe
 - offer brief further help without reopening the claim flow
 - do not re-list the full claim details unless clarity is needed
 protected_values:
@@ -153,6 +156,7 @@ required_concepts:
 - claim submitted
 - now with the team for processing
 - nothing else needed right now
+- one grounded expectation for where the outcome will show up
 - further help lightly offered
 do_not_include:
 - internal service labels
@@ -163,7 +167,7 @@ do_not_include:
 
 ## 2. Enthusiastic — Conv 5
 
-- Conversation: `Quick retro claim — Air NZ long-haul`
+- Conversation: `Quick Airpoints claim — Air NZ long-haul`
 - Trigger: `Standard Air NZ AKL-Vancouver return; points missed on return leg only.`
 
 ### Turn 1
@@ -183,7 +187,8 @@ facts_to_include:
 next_action:
 - keep the response efficient and positive
 - acknowledge the issue as described by the customer
-- ask only for the details needed to check it properly
+- ask for the simplest useful return-leg details first
+- avoid defaulting straight to a long list of identifiers if a simpler starting point will do
 - do not imply the claim is already accepted or definitely the next step
 protected_values:
 - return leg
@@ -245,9 +250,9 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_confirm
 exit_point: EXIT_3_CLEAN_RETRO_CLAIM_ELIGIBLE
-customer_facing_task: Confirm that the missing return leg looks eligible for a retro claim and ask whether the customer wants you to submit it.
+customer_facing_task: Confirm that the missing return leg looks eligible for an Airpoints claim and ask whether the customer wants you to submit it.
 facts_to_include:
-- based on the details provided, the missing return leg looks eligible for a retro claim
+- based on the details provided, the missing return leg looks eligible for an Airpoints claim
 - Oscar can submit the claim from here if the customer wants
 next_action:
 - say the missing return leg looks eligible
@@ -278,14 +283,16 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: business_result
 exit_point: EXIT_4_SUBMIT_CLEAN_RETRO_CLAIM
-customer_facing_task: Confirm that the claim for the missing return leg has been submitted cleanly, explain what happens next, and close with a light offer of further help.
+customer_facing_task: Confirm that the Airpoints claim for the missing return leg has been submitted cleanly, explain what happens next, and close with a light offer of further help.
 facts_to_include:
-- the claim for the missing return leg has been submitted
+- the Airpoints claim for the missing return leg has been submitted
 - the claim is now with the Airpoints team for processing
 - no further customer action is needed right now
+- the customer can keep an eye on their Airpoints activity for the missing points to appear
 next_action:
 - confirm submission clearly
 - explain the next step briefly and keep the tone positive and concise
+- give one grounded way to check progress without inventing a fixed timeframe
 - offer brief further help without reopening the claim flow
 - do not re-list the claim details unless clarity is needed
 protected_values:
@@ -298,6 +305,7 @@ required_concepts:
 - claim submitted successfully
 - now with the team for processing
 - no further customer action needed right now
+- one grounded expectation for where the outcome will show up
 - further help lightly offered
 do_not_include:
 - internal service labels
@@ -321,13 +329,14 @@ Service Contract:
 service_type: partner_airline_retro_claim
 response_kind: handover
 exit_point: EXIT_1_PARTNER_AIRLINE_SPECIALIST_HANDOVER
-customer_facing_task: Explain that partner-airline Airpoints claims need to be lodged with the Airpoints support team through the request form, and cannot be completed directly here.
+customer_facing_task: Explain that this partner-airline Airpoints claim cannot be completed here, and clearly tell the customer that the next step is to use the Airpoints support request form.
 facts_to_include:
 - Lufthansa is a partner-airline claim case
 - the Airpoints support team request form is required
 - once lodged, partner claims can take 3 or more weeks
 next_action:
 - explain the specialist path in customer-relevant language
+- make the next step explicit
 - hand over cleanly
 protected_values:
 - Lufthansa
@@ -352,13 +361,14 @@ Service Contract:
 service_type: partner_airline_retro_claim
 response_kind: handover
 exit_point: EXIT_2_RESTATE_PARTNER_HANDOVER
-customer_facing_task: Restate the boundary clearly and keep the handover path simple.
+customer_facing_task: Restate the boundary clearly, keep the handover path simple, and point back to the request form as the next step.
 facts_to_include:
 - this cannot be completed directly here
 - the Airpoints support team request form is still the correct path
 next_action:
 - hold the boundary
 - point back to the correct specialist path
+- make the required next step explicit again
 - do not reopen direct execution
 protected_values:
 - Airpoints support team request form

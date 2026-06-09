@@ -76,15 +76,17 @@ facts_to_include:
 - a vegetarian meal cannot be added on this flight
 next_action:
 - clarify the reason calmly
-- avoid sounding corrective or argumentative
+- use one short reason-led explanation
+- avoid sounding corrective, argumentative, or rebuttal-heavy
 - keep the explanation to the one point being asked about
+- do not replay the earlier explanation in a new form
 - do not reopen the meal-request path
 protected_values:
 - domestic
 required_concepts:
 - domestic flight is the reason
 - no meal service on domestic flights
-- limitation explained briefly
+- explanation stays brief
 do_not_include:
 - internal service labels
 - apology-heavy language
@@ -143,7 +145,7 @@ Service Contract:
 service_type: add_meal_request
 response_kind: business_result
 exit_point: EXIT_4_HANDLE_FRUSTRATION_AND_CLOSE
-customer_facing_task: Acknowledge the frustration briefly, offer one light practical close, and ask if there is anything else Oscar can help with on this booking.
+customer_facing_task: Acknowledge the frustration briefly, offer one light practical close if it still helps, and ask if there is anything else Oscar can help with on this booking.
 facts_to_include:
 - the customer is frustrated about the limit
 - if the customer wants something specific, they can bring it with them or pick something up before boarding
@@ -151,6 +153,7 @@ next_action:
 - use a short, natural acknowledgement of the reaction
 - keep the response brief and lightly warm
 - do not re-explain the limitation
+- do not replay the same limit in softer wording
 - offer one practical close if it still helps
 - ask if there is anything else you can help with on this booking
 protected_values:
@@ -160,6 +163,7 @@ required_concepts:
 - practical alternative lightly available
 - further help offered on this booking
 - close without pestering
+- no policy replay
 do_not_include:
 - internal service labels
 - fake empathy like "I understand how you feel"
