@@ -193,55 +193,69 @@ response_kind: ask_missing
 exit_point: EXIT_1_CLEAN_RETRO_CLAIM_START
 customer_facing_task: Acknowledge what the customer has described about the missing return leg, and collect the details needed to look into it properly before moving to a claim.
 facts_to_include:
-- the customer says the return leg did not credit
-- the simplest return-leg detail is enough to start
+- Oscar can look into the missing Airpoints for the return leg from Vancouver
+- one return-leg identifier is enough to start
 - a booking reference can look like ABC123
-- an e-ticket number will usually start with 086...
-- if needed later, an Airpoints™ number can look like a number starting with 12...
+- an e-ticket number can look like 0861234567890
+- a booking reference is usually in the booking confirmation email
+- an e-ticket number is usually on the ticket or itinerary
 next_action:
 - keep the response efficient and positive
-- acknowledge the issue as described by the customer
+- lead with an I can look into it framing
+- do not paraphrase the customer's report as a confirmed finding
+- keep the opener brief before asking for the next useful detail
 - explain what kind of detail helps
-- give a useful example of the identifier shape
-- ask for the simplest useful return-leg detail first
-- make clear the examples are there to help recognise the right detail
+- present the two most useful identifier options as a short bulleted list
+- give one simple format example for each identifier type
+- ask for one minimum useful return-leg identifier
+- keep each identifier on its own bullet
+- if helpful, include the where-to-find cue in the same bullet as the identifier
+- do not move the where-to-find guidance into a separate paragraph after the list
+- avoid masked-style examples unless referring to real customer data
 - avoid a long checklist unless it is genuinely needed
 - do not imply the claim is already accepted or definitely the next step
 protected_values:
 - return leg
 - missing
 required_concepts:
-- return-leg issue acknowledged as customer-reported
+- Oscar is looking into the missing Airpoints for the return leg
 - examples help the customer recognise the right detail
+- where-to-find guidance is practical and brief
+- identifier options are easy to scan
+- each identifier bullet carries its own where-to-find cue
 - collect details before deciding the next step
 do_not_include:
 - internal service labels
 - unnecessary policy explanation
 - invented delay
 - premature success language
+- dense combined explanation of multiple identifier examples
+- meta explanation about why examples are being shown
+- separate follow-up paragraph that repeats where the identifiers are found
 ```
 
 ### Turn 2
 
 ```text
-Latest Customer Message: yep it's the yvr to akl return on 2026-10-22. booking XYZ789 and the ticket number is 0865555555555
+Latest Customer Message: yep, booking XYZ789 and the ticket number is 0865555555555
 
 Service Contract:
 
 service_type: claim_missing_airpoints
 response_kind: business_result
 exit_point: EXIT_2_ACKNOWLEDGE_CLEAN_RETRO_DETAILS
-customer_facing_task: Acknowledge the return-leg details, confirm you have what you need to check the missing points, and keep the conversation moving without a redundant confirmation step.
+customer_facing_task: Acknowledge the minimum details provided, play back the matched return flight, and confirm you have what you need to check the missing points.
 facts_to_include:
 - booking reference: XYZ789
 - ticket number: 0865555555555
-- route: YVR to AKL return
+- matched return flight: YVR to AKL
 - flight date: 2026-10-22
 - missing sector: return leg
 next_action:
-- acknowledge that the details are in
+- acknowledge that the minimum details are in
+- play back the matched return flight as something Oscar has found from those details
 - say you have what you need to check now
-- do not ask the customer to confirm details they just typed unless something is unclear
+- do not word the date and leg as though the customer supplied them directly
 protected_values:
 - XYZ789
 - 0865555555555
@@ -251,6 +265,7 @@ protected_values:
 - return leg
 required_concepts:
 - details received
+- matched flight found from minimum viable knowledge
 - enough information to check
 - no extra confirmation step
 do_not_include:
@@ -270,12 +285,12 @@ Service Contract:
 service_type: claim_missing_airpoints
 response_kind: ask_confirm
 exit_point: EXIT_3_CLEAN_RETRO_CLAIM_ELIGIBLE
-customer_facing_task: Confirm that the missing return leg looks eligible for an Airpoints™ claim and ask whether the customer wants you to submit it.
+customer_facing_task: Confirm that the matched return flight looks eligible for an Airpoints™ claim and ask whether the customer wants you to submit it.
 facts_to_include:
-- based on the details provided, the missing return leg looks eligible for an Airpoints™ claim
+- based on the details provided, the matched return flight looks eligible for an Airpoints™ claim
 - Oscar can submit the claim from here if the customer wants
 next_action:
-- say the missing return leg looks eligible
+- say the matched return flight looks eligible
 - ask directly whether the customer wants you to submit the claim
 - keep the question positive, clear, and easy to answer
 protected_values:
@@ -283,6 +298,7 @@ protected_values:
 - 0865555555555
 - AKL
 - YVR
+- 2026-10-22
 - return leg
 required_concepts:
 - eligible for claim
