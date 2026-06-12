@@ -1,0 +1,24 @@
+task mode: create
+primary deck-profile: product-platform
+secondary profile gates: strategy-leadership
+required proof objects:
+- workflow stack showing how discovery, artefacts, Service Agent blocks, and the rewriter relate
+- progressive iteration loop showing how prompt changes are isolated and regression-tested
+- concise session plan for live workshop use
+source/asset requirements:
+- workspace artefacts from air-nz-conversation-design
+- current Oscar rewriter system prompt draft v8
+- feedback synthesis and reviewer summaries from June 2026
+- CBA typography-led PDF used as visual quality reference only
+brand authenticity constraints for logos, icons, mascots, screenshots, and other identity assets:
+- no fabricated Air New Zealand or CBA brand marks
+- black, white, and grey only
+- typography-led layout with minimal supporting geometry
+profile-specific QA gates:
+- the deck must explain a real system, not a generic prompt-tuning process
+- the flow-state slide must clearly show what lives in the Service Agent block versus the rewriter
+- the iteration slide must make scope control and regression discipline legible at thumbnail size
+- no repeated card-grid cadence across consecutive slides
+known missing inputs:
+- no editable source template deck was supplied
+- no live JSON turn examples were requested for inclusion in the slides

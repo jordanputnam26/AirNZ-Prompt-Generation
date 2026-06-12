@@ -1,0 +1,15 @@
+slide 01: cover with left editorial block, right-side session metadata, oversized page number
+slide 02: two-question framing slide with mirrored columns and large numeric anchors
+slide 03: horizontal process chain from discovery through rewriter
+slide 04: stacked systems diagram showing foundations, Service Agent block, and rewriter
+slide 05: numbered iteration loop with right-side operating rules
+slide 06: four-column learning board with structural takeaways
+slide 07: agenda slide with timed workshop sequence and decision prompts
+
+macro-layout families used: editorial cover, mirrored split, horizontal sequence, stacked architecture, loop plus rail, multi-column insight grid, timeline agenda
+
+hard-gate checks:
+- no three consecutive slides share the same macro layout
+- no rounded-card default
+- no decorative boxes around prose
+- every slide title is a claim, not a label

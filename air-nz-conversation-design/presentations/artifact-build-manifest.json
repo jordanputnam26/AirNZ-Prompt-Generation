@@ -1,0 +1,88 @@
+{
+  "output": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/air-nz-conversation-design/presentations/air-nz-tov-refinement-session-v1.pptx",
+  "outputBytes": 38264,
+  "slideCount": 7,
+  "slideSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "previewDir": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview",
+  "previewPaths": [
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-01.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-02.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-03.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-04.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-05.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-06.png",
+    "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/slide-07.png"
+  ],
+  "layoutDir": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final",
+  "layoutResults": [
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-01.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-02.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-03.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-04.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-05.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-06.layout.json"
+    },
+    {
+      "layoutPath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/layout/final/slide-07.layout.json"
+    }
+  ],
+  "contactSheet": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/preview/contact-sheet.png",
+  "slides": [
+    {
+      "index": 1,
+      "requestedSlideNumber": 1,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-01.mjs",
+      "exportName": "slide01"
+    },
+    {
+      "index": 2,
+      "requestedSlideNumber": 2,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-02.mjs",
+      "exportName": "slide02"
+    },
+    {
+      "index": 3,
+      "requestedSlideNumber": 3,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-03.mjs",
+      "exportName": "slide03"
+    },
+    {
+      "index": 4,
+      "requestedSlideNumber": 4,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-04.mjs",
+      "exportName": "slide04"
+    },
+    {
+      "index": 5,
+      "requestedSlideNumber": 5,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-05.mjs",
+      "exportName": "slide05"
+    },
+    {
+      "index": 6,
+      "requestedSlideNumber": 6,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-06.mjs",
+      "exportName": "slide06"
+    },
+    {
+      "index": 7,
+      "requestedSlideNumber": 7,
+      "modulePath": "/Users/jordanputnam/Documents/Air-NZ-Prompt-Building-Workspace/outputs/manual-20260612-airnz-tov-refinement-session/presentations/air-nz-tov-refinement-session/slides/slide-07.mjs",
+      "exportName": "slide07"
+    }
+  ]
+}

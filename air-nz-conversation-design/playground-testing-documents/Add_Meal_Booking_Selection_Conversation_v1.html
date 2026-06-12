@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oscar — Add Meal Booking Selection Conversation</title>
+  <style>
+    :root {
+      --background: oklch(0.975 0.003 220);
+      --panel: oklch(0.995 0.002 220);
+      --foreground: oklch(0.24 0.006 220);
+      --muted-foreground: oklch(0.53 0.01 220);
+      --border: oklch(0.9 0.005 220);
+      --border-strong: oklch(0.79 0.008 220);
+      --accent: oklch(0.62 0.11 223);
+      --selection: oklch(0.965 0.018 223);
+      --user-fill: oklch(0.16 0.004 220);
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.45;
+    }
+
+    .shell {
+      width: min(560px, calc(100% - 24px));
+      margin: 0 auto;
+      padding: 18px 0 32px;
+    }
+
+    .thread {
+      display: grid;
+      gap: 12px;
+    }
+
+    .message-user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .user-bubble {
+      max-width: 360px;
+      background: var(--user-fill);
+      color: oklch(0.99 0.002 220);
+      border-radius: 16px 16px 6px 16px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    }
+
+    .user-label,
+    .agent-label {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .user-text {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 400;
+    }
+
+    .message-agent {
+      max-width: 480px;
+    }
+
+    .agent-label {
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+    }
+
+    .agent-text {
+      margin: 0 0 10px;
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .booking-stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .booking-card {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+      padding: 11px 12px;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .booking-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .booking-card[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--selection);
+      box-shadow: inset 0 0 0 1px var(--accent);
+    }
+
+    .radio {
+      width: 14px;
+      height: 14px;
+      margin-top: 3px;
+      border-radius: 4px;
+      border: 1.5px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .booking-card[aria-pressed="true"] .radio {
+      border-color: var(--accent);
+    }
+
+    .booking-card[aria-pressed="true"] .radio::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    .booking-copy {
+      display: grid;
+      gap: 3px;
+    }
+
+    .booking-context {
+      margin: 0 0 1px;
+      font-size: 10px;
+      line-height: 1.3;
+      color: var(--muted-foreground);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .booking-title {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.25;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .booking-secondary {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: oklch(0.31 0.007 220);
+      font-weight: 500;
+    }
+
+    .booking-tertiary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-top: 1px;
+    }
+
+    .booking-line {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.35;
+      color: var(--muted-foreground);
+      font-weight: 400;
+    }
+
+    .selection {
+      margin: 10px 0 0;
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted-foreground);
+    }
+
+    .action-row {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .proceed-button {
+      appearance: none;
+      border: 0;
+      border-radius: 10px;
+      background: var(--foreground);
+      color: oklch(0.99 0.002 220);
+      padding: 10px 14px;
+      width: 100%;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 180ms ease, background-color 180ms ease;
+    }
+
+    .proceed-button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 16px, 560px);
+        padding: 14px 0 24px;
+      }
+
+      .user-bubble {
+        max-width: 320px;
+        padding: 11px 12px;
+      }
+
+      .user-text {
+        font-size: 14px;
+      }
+
+      .agent-text {
+        font-size: 14px;
+      }
+
+      .booking-title {
+        font-size: 14px;
+      }
+
+      .booking-secondary {
+        font-size: 12px;
+      }
+
+      .booking-line {
+        font-size: 11px;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="thread">
+      <div class="message-user">
+        <div class="user-bubble">
+          <strong class="user-label">User</strong>
+          <p class="user-text">can you add a special meal to this flight</p>
+        </div>
+      </div>
+
+      <div class="message-agent">
+        <strong class="agent-label">Agent</strong>
+        <p class="agent-text">Please choose which flight you want the special meal added to:</p>
+        <div class="booking-stack" id="booking-stack"></div>
+        <div class="action-row">
+          <p class="selection" id="selection-copy">No flights selected</p>
+          <button class="proceed-button" id="proceed-button" type="button" disabled>Next</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const bookings = [
+      {
+        id: "XYZ790",
+        route: "Auckland to Sydney",
+        date: "28 Jun 2026",
+        sortDate: "2026-06-28",
+        customers: "James Demo",
+        sectors: ["NZ101, Auckland to Sydney"],
+      },
+      {
+        id: "XYZ791",
+        route: "Auckland to Brisbane",
+        date: "30 Jun 2026",
+        sortDate: "2026-06-30",
+        customers: "James Demo, Emily Demo",
+        sectors: ["NZ147, Auckland to Brisbane"],
+      },
+      {
+        id: "ABC125",
+        route: "Auckland to Wellington",
+        date: "3 Jul 2026",
+        sortDate: "2026-07-03",
+        customers: "James Demo",
+        sectors: ["NZ101, Auckland to Wellington"],
+      },
+      {
+        id: "XYZ792",
+        route: "Auckland to Sydney",
+        date: "12 Jul 2026",
+        sortDate: "2026-07-12",
+        customers: "James Demo",
+        sectors: ["NZ101, Auckland to Sydney"],
+      },
+      {
+        id: "CDS457",
+        route: "Auckland to Melbourne",
+        date: "25 Jul 2026",
+        sortDate: "2026-07-25",
+        customers: "James Demo",
+        sectors: ["NZ103, Auckland to Melbourne"],
+      },
+    ];
+
+    function formatRoute(text) {
+      return text.replaceAll(" to ", " → ");
+    }
+
+    let selectedIds = new Set(["XYZ791"]);
+
+    function toggleBooking(selectedId) {
+      if (selectedIds.has(selectedId)) {
+        selectedIds.delete(selectedId);
+      } else {
+        selectedIds.add(selectedId);
+      }
+
+      renderBookings();
+    }
+
+    function renderBookings() {
+      const stack = document.getElementById("booking-stack");
+      const selection = document.getElementById("selection-copy");
+      const proceedButton = document.getElementById("proceed-button");
+      stack.innerHTML = "";
+
+      const orderedBookings = [...bookings].sort((a, b) => {
+        if (a.sortDate !== b.sortDate) return a.sortDate.localeCompare(b.sortDate);
+        return a.route.localeCompare(b.route);
+      });
+
+      orderedBookings.forEach((booking) => {
+        const sectorsLine = booking.sectors.length > 1
+          ? booking.sectors.map((sector) => sector.split(",")[0]).join(" • ")
+          : booking.sectors[0].split(",")[0];
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "booking-card";
+        button.setAttribute("aria-pressed", String(selectedIds.has(booking.id)));
+        button.innerHTML = `
+          <span class="radio" aria-hidden="true"></span>
+          <div class="booking-copy">
+            <p class="booking-context">${booking.date}</p>
+            <p class="booking-title">${formatRoute(booking.route)}</p>
+            <p class="booking-secondary">Passengers: ${booking.customers}</p>
+            <div class="booking-tertiary">
+              <p class="booking-line">Booking ${booking.id}</p>
+              <p class="booking-line">•</p>
+              <p class="booking-line">${sectorsLine}</p>
+            </div>
+          </div>
+        `;
+        button.addEventListener("click", () => toggleBooking(booking.id));
+        stack.appendChild(button);
+      });
+
+      const selectedBookings = orderedBookings.filter((booking) => selectedIds.has(booking.id));
+      proceedButton.disabled = selectedBookings.length === 0;
+      selection.textContent = selectedBookings.length === 0
+        ? "No flights selected"
+        : `${selectedBookings.length} flight${selectedBookings.length > 1 ? "s" : ""} selected`;
+    }
+
+    renderBookings();
+  </script>
+</body>
+</html>
